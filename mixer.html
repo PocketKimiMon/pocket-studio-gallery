@@ -129,35 +129,67 @@ TILES.forEach(([v,name])=>{
 function updateStat(){ stat.textContent = canvas.querySelectorAll('.crow').length + ' sections in canvas'; }
 function emptyCheck(){ if(!canvas.querySelector('.crow')){ if(!canvas.querySelector('.empty')){ const e=document.createElement('div'); e.className='empty'; e.innerHTML='Drag section tiles here to start building.<br>Each tile is a real slice of one of the 8 booking-page versions.'; canvas.appendChild(e);} } else { const e=canvas.querySelector('.empty'); if(e) e.remove(); } updateStat(); }
 
-function addRow(data, atTop){
+// palette drag -> canvas (insert at cursor, or append)
+canvas.addEventListener('drop',e=>{
+  e.preventDefault(); canvas.classList.remove('dragover');
+  const raw = e.dataTransfer.getData('text/plain');
+  if(!raw) return;
+  if(raw==='__row__') return; // row reorder handled by row drop handler
+  try{
+    const data=JSON.parse(raw);
+    // find row under cursor to insert before
+    const rows=[...canvas.querySelectorAll('.crow')];
+    let ref=null;
+    for(const r of rows){ const b=r.getBoundingClientRect(); if(e.clientY < b.top + b.height/2){ ref=r; break; } }
+    if(ref) canvas.insertBefore(makeRow(data), ref); else addRow(data);
+    toast('section added');
+  }catch(_){}
+});
+
+function makeRow(data){
   canvas.querySelector('.empty')?.remove();
-  const row = document.createElement('div');
+  const row=document.createElement('div');
   row.className='crow'; row.draggable=true;
-  row.innerHTML = `<span class="tag"><span class="v">${data.v}</span> · ${data.name} s${data.i}</span>
+  row.innerHTML=`<span class="tag"><span class="v">${data.v}</span> · ${data.name} s${data.i}</span>
     <img src="${data.src}" alt="">
     <div class="ctl"><button title="move up" data-act="up">↑</button><button title="move down" data-act="down">↓</button><button title="remove" data-act="del">✕</button></div>`;
   row.querySelector('[data-act=del]').onclick=()=>{row.remove();emptyCheck();};
   row.querySelector('[data-act=up]').onclick=()=>{const p=row.previousElementSibling; if(p&&p.classList.contains('crow')) canvas.insertBefore(row,p);};
   row.querySelector('[data-act=down]').onclick=()=>{const n=row.nextElementSibling; if(n&&n.classList.contains('crow')) canvas.insertBefore(n,row);};
-  row.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain','__row__'); row.classList.add('dragging'); });
-  row.addEventListener('dragend',()=>row.classList.remove('dragging'));
-  if(atTop && canvas.firstChild) canvas.insertBefore(row, canvas.firstChild); else canvas.appendChild(row);
+  bindRowDnD(row);
   emptyCheck();
+  return row;
+}
+// override addRow to use makeRow so all new rows are DnD-bound
+function addRow(data, atTop){
+  const row=makeRow(data);
+  if(atTop && canvas.firstChild) canvas.insertBefore(row, canvas.firstChild); else canvas.appendChild(row);
+  return row;
 }
 
-// palette drag -> canvas
-canvas.addEventListener('dragover',e=>{ e.preventDefault(); canvas.classList.add('dragover'); });
-canvas.addEventListener('dragleave',()=>canvas.classList.remove('dragover'));
-canvas.addEventListener('drop',e=>{
-  e.preventDefault(); canvas.classList.remove('dragover');
-  const raw = e.dataTransfer.getData('text/plain');
-  if(!raw) return;
-  if(raw==='__row__') return; // row reorder handled separately
-  try{ addRow(JSON.parse(raw)); toast('section added'); }catch(_){}
-});
-
-// row reordering within canvas
-canvas.addEventListener('dragover',e=>{ if(e.dataTransfer.getData('text/plain')==='__row__') e.preventDefault(); });
+// row reordering within canvas — drag a row onto another to insert before it
+let dragRow=null;
+canvas.querySelectorAll('.crow').forEach(bindRowDnD);
+function bindRowDnD(row){
+  row.addEventListener('dragstart',e=>{ dragRow=row; row.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; try{e.dataTransfer.setData('text/plain','__row__');}catch(_){} });
+  row.addEventListener('dragend',()=>{ row.classList.remove('dragging'); dragRow=null; canvas.querySelectorAll('.crow').forEach(r=>r.classList.remove('over')); });
+  row.addEventListener('dragover',e=>{ e.preventDefault(); e.stopPropagation(); row.classList.add('over'); });
+  row.addEventListener('dragleave',()=>row.classList.remove('over'));
+  row.addEventListener('drop',e=>{
+    e.preventDefault(); e.stopPropagation(); row.classList.remove('over');
+    if(!dragRow || dragRow===row) return;
+    const r=row.getBoundingClientRect();
+    const after = (e.clientY - r.top) > r.height/2;
+    if(after) row.parentNode.insertBefore(dragRow, row.nextSibling);
+    else row.parentNode.insertBefore(dragRow, row);
+    updateStat();
+  });
+}
+// re-bind when new rows are added
+const _addRow = addRow;
+window.addRow = function(data, atTop){
+  _addRow(data, atTop); bindRowDnD(canvas.querySelector('.crow:last-child'));
+};
 
 document.getElementById('clear').onclick=()=>{ canvas.querySelectorAll('.crow').forEach(r=>r.remove()); emptyCheck(); toast('cleared'); };
 document.getElementById('sample').onclick=()=>{
