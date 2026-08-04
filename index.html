@@ -82,18 +82,27 @@
 
 <div class="grid" id="grid"></div>
 
-<footer>Screenshots rendered from local source at 1280×1000 · 8 distinct versions catalogued</footer>
+<footer>Screenshots rendered from local source (full-page) · 17 distinct versions catalogued · deduplicated from 60+ archive copies</footer>
 
 <script>
 const VERSIONS = [
-  {img:"01-rudys-booking.png", name:"Rudy's Fremont Booking", src:"archive/projects/rudys-booking/index.html", tag:"Rudy's era · multi-stylist", url:"https://pocketkimimon.github.io/pocket-studio-booking/"},
-  {img:"02-mykey-booking.png", name:"MyKey Booking (Rudy's brand)", src:"booking-archive/mykey-booking/index.html", tag:"Early MyKey rebrand"},
-  {img:"03-booking-page.png", name:"Booking Page v1", src:"booking-archive/booking-page/index.html", tag:"'Book with Me' gen 1"},
-  {img:"04-booking-page-alt.png", name:"Booking Page v1 (alt)", src:"booking-archive/booking-page-alt/index.html", tag:"'Book with Me' variant"},
-  {img:"05-mobile-barber.png", name:"Mobile Barber Booking", src:"archive/projects/mobile-barber-booking/index.html", tag:"Mobile-barber spin"},
-  {img:"06-pocket-studio-static.png", name:"Pocket Studio (current static)", src:"booking-archive/pocket-studio-static/index.html", tag:"Live deploy · current", url:"https://pocketkimimon.github.io/pocket-studio-booking/"},
-  {img:"07-projects-pocket-studio.png", name:"Mykey Pocket — Hair Artist", src:"projects/pocket-studio/index.html", tag:"projects/ snapshot"},
-  {img:"08-react-newest-classic.png", name:"React Newest (classic)", src:"booking-archive/react-newest/public/classic/index.html", tag:"Latest React build"}
+  {img:"v01.png", name:"Pocket Studio (react-newest)", src:"archive/pocket-studio-current/archive/apps/tanstack-react-newest/public/classic/index.html", tag:"React newest classic"},
+  {img:"v02.png", name:"PocketStudio Marketing", src:"archive/pocket-studio-current/design-system/ui_kits/marketing/index.html", tag:"Design-system kit"},
+  {img:"v03.png", name:"Pocket Studio (static-src-archive)", src:"archive/pocket-studio-current/archive/apps/tanstack-10a2c4c2/booking-archive/pocket-studio-static/archive/static-source-archive/index.html", tag:"Static archive"},
+  {img:"v04.png", name:"Pocket Studio (current app)", src:"pocket-studio-booking-10a2c4c2 (live)", tag:"Live deploy · current", url:"https://pocketkimimon.github.io/pocket-studio-booking/"},
+  {img:"v05.png", name:"Booking Page v1", src:"archive/booking-page/index.html", tag:"'Book with Me' gen 1"},
+  {img:"v06.png", name:"MyKey Booking (Rudy's)", src:"archive/pocket-studio-current/archive/apps/tanstack-10a2c4c2/booking-archive/mykey-booking/index.html", tag:"Rudy's-brand rebrand"},
+  {img:"v07.png", name:"Pocket Studio (react-newest-classic)", src:"archive/pocket-studio-current/archive/apps/tanstack-10a2c4c2/booking-archive/react-newest/public/classic/index.html", tag:"React newest classic"},
+  {img:"v08.png", name:"Rudy's Fremont Booking", src:"archive/projects/rudys-booking/index.html", tag:"Rudy's era · multi-stylist"},
+  {img:"v09.png", name:"Rainbow Rest Stop", src:"archive/pocket-studio-current/design-system/ui_kits/rainbow-rest-stop/index.html", tag:"Podcast UI kit"},
+  {img:"v10.png", name:"Pocket Studio (classic-public)", src:"archive/pocket-studio-current/archive/apps/tanstack-10a2c4c2/booking-archive/pocket-studio-static/archive/classic-public/index.html", tag:"Classic public"},
+  {img:"v11.png", name:"Mykey Pocket — Hair Artist", src:"projects/pocket-studio/index.html", tag:"projects/ snapshot"},
+  {img:"v12.png", name:"Mobile Barber Booking", src:"archive/projects/mobile-barber-booking/index.html", tag:"Mobile-barber spin"},
+  {img:"v13.png", name:"Pocket Studio (static)", src:"booking-archive/pocket-studio-static/index.html", tag:"Live static · current", url:"https://pocketkimimon.github.io/pocket-studio-booking/"},
+  {img:"v14.png", name:"Rudy's Service Menu", src:"projects/rudys-menu/index.html", tag:"Service menu"},
+  {img:"v15.png", name:"Pocket Studio (react-newest pub)", src:"archive/react-newest/public/classic/index.html", tag:"React newest pub"},
+  {img:"v16.png", name:"Monster Survivor", src:"archive/pocket-studio-current/design-system/ui_kits/monster-survivor/index.html", tag:"Arcade UI kit"},
+  {img:"v17.png", name:"PocketStudio Agent Dashboard", src:"archive/pocket-studio-current/design-system/ui_kits/agent-dashboard/index.html", tag:"Agent dashboard kit"}
 ];
 
 const grid = document.getElementById('grid');

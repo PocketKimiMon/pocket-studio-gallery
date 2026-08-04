@@ -79,22 +79,31 @@
 
 <footer>
   <span id="stat">0 sections in canvas</span>
-  <span>Pocket Studio section mixer · 8 versions × 6 bands = 48 tiles</span>
+  <span>Pocket Studio section mixer · 17 versions × 6 bands = 102 tiles</span>
 </footer>
 
 <div class="toast" id="toast"></div>
 
 <script>
 const TILES = [
-  // version slug, display name, band count 6
-  ["01-rudys-booking","Rudy's Fremont"],
-  ["02-mykey-booking","MyKey (Rudy's)"],
-  ["03-booking-page","Booking v1"],
-  ["04-booking-page-alt","Booking v1 alt"],
-  ["05-mobile-barber","Mobile Barber"],
-  ["06-pocket-studio-static","Pocket Studio"],
-  ["07-projects-pocket-studio","Mykey Pocket"],
-  ["08-react-newest-classic","React Newest"]
+  // version slug (matches tiles/<slug>_sN.png), display label
+  ["v01","Pocket Studio (react-newest)"],
+  ["v02","PocketStudio Marketing"],
+  ["v03","Pocket Studio (static-src-archive)"],
+  ["v04","Pocket Studio (current app)"],
+  ["v05","Booking Page v1"],
+  ["v06","MyKey Booking (Rudy's)"],
+  ["v07","Pocket Studio (react-newest-classic)"],
+  ["v08","Rudy's Fremont Booking"],
+  ["v09","Rainbow Rest Stop"],
+  ["v10","Pocket Studio (classic-public)"],
+  ["v11","Mykey Pocket — Hair Artist"],
+  ["v12","Mobile Barber Booking"],
+  ["v13","Pocket Studio (static)"],
+  ["v14","Rudy's Service Menu"],
+  ["v15","Pocket Studio (react-newest pub)"],
+  ["v16","Monster Survivor"],
+  ["v17","PocketStudio Agent Dashboard"]
 ];
 const BANDS = 6;
 const canvas = document.getElementById('canvas');
@@ -127,7 +136,7 @@ TILES.forEach(([v,name])=>{
 });
 
 function updateStat(){ stat.textContent = canvas.querySelectorAll('.crow').length + ' sections in canvas'; }
-function emptyCheck(){ if(!canvas.querySelector('.crow')){ if(!canvas.querySelector('.empty')){ const e=document.createElement('div'); e.className='empty'; e.innerHTML='Drag section tiles here to start building.<br>Each tile is a real slice of one of the 8 booking-page versions.'; canvas.appendChild(e);} } else { const e=canvas.querySelector('.empty'); if(e) e.remove(); } updateStat(); }
+function emptyCheck(){ if(!canvas.querySelector('.crow')){ if(!canvas.querySelector('.empty')){ const e=document.createElement('div'); e.className='empty'; e.innerHTML='Drag section tiles here to start building.<br>Each tile is a real slice of one of the 17 booking-page versions.'; canvas.appendChild(e);} } else { const e=canvas.querySelector('.empty'); if(e) e.remove(); } updateStat(); }
 
 // palette drag -> canvas (insert at cursor, or append)
 canvas.addEventListener('drop',e=>{
