@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pocket Studio — Modular Section Mixer</title>
+<style>
+  :root{
+    --void:#120E17; --lime:#8ACE00; --paper:#f4f1ea; --ink:#1a1620;
+    --card:#fff; --line:#e3ded3; --muted:#6b6470; --accent:#7c5cff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:"Inter",system-ui,sans-serif;background:var(--paper);color:var(--ink);display:flex;flex-direction:column;height:100vh;overflow:hidden}
+  header{padding:14px 20px;border-bottom:1px solid var(--line);background:#fff;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  h1{font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+  h1 .dot{width:10px;height:10px;border-radius:50%;background:var(--lime)}
+  .sub{color:var(--muted);font-size:12px}
+  .toolbar{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+  .btn{font:inherit;font-size:12px;font-weight:600;border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 12px;cursor:pointer}
+  .btn:hover{background:#f7f5ef}
+  .btn.primary{background:var(--void);color:#fff;border-color:var(--void)}
+  .btn.danger{color:#b3261e;border-color:#f0c4c0}
+  main{flex:1;display:grid;grid-template-columns:320px 1fr;min-height:0}
+  /* palette */
+  .palette{border-right:1px solid var(--line);overflow-y:auto;background:#faf8f3;padding:12px}
+  .palette h2{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 4px 8px}
+  .palette h2:first-child{margin-top:0}
+  .ptiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .ptile{background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden;cursor:grab;position:relative;aspect-ratio:1280/750}
+  .ptile:active{cursor:grabbing}
+  .ptile img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+  .ptile .lbl{position:absolute;left:0;right:0;bottom:0;background:rgba(18,14,23,.78);color:#fff;font-size:10px;padding:3px 6px;display:flex;justify-content:space-between}
+  .ptile .ver{color:var(--lime);font-weight:700}
+  /* canvas */
+  .canvas-wrap{overflow-y:auto;padding:20px;display:flex;flex-direction:column;align-items:center}
+  .canvas{width:100%;max-width:720px;min-height:300px;border:2px dashed var(--line);border-radius:14px;background:#fff;padding:10px;display:flex;flex-direction:column;gap:8px;transition:border-color .15s}
+  .canvas.dragover{border-color:var(--accent);background:#f6f3ff}
+  .canvas .empty{color:var(--muted);text-align:center;padding:60px 20px;font-size:14px}
+  .crow{position:relative;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#f0eee8;aspect-ratio:1280/750;cursor:grab}
+  .crow:active{cursor:grabbing}
+  .crow.dragging{opacity:.4}
+  .crow img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+  .crow .ctl{position:absolute;top:6px;right:6px;display:flex;gap:4px}
+  .crow .ctl button{width:24px;height:24px;border-radius:6px;border:none;background:rgba(18,14,23,.8);color:#fff;cursor:pointer;font-size:13px;line-height:1}
+  .crow .tag{position:absolute;top:6px;left:6px;background:rgba(18,14,23,.8);color:#fff;font-size:10px;padding:2px 7px;border-radius:6px}
+  .crow .tag .v{color:var(--lime);font-weight:700}
+  footer{padding:8px 20px;border-top:1px solid var(--line);background:#fff;font-size:11px;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+  .toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--void);color:#fff;padding:8px 16px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
+  .toast.show{opacity:1}
+  @media(max-width:720px){main{grid-template-columns:1fr;grid-template-rows:240px 1fr}.palette{border-right:none;border-bottom:1px solid var(--line)}}
+</style>
+</head>
+<body>
+<header>
+  <h1><span class="dot"></span>Modular Section Mixer</h1>
+  <span class="sub">Drag section tiles from any version into the canvas. Mix &amp; match to build your own page.</span>
+  <div class="toolbar">
+    <button class="btn" id="sample">✨ Load sample mix</button>
+    <button class="btn" id="clear">🗑 Clear</button>
+    <button class="btn" id="save">💾 Save</button>
+    <button class="btn" id="load">📂 Load</button>
+    <button class="btn primary" id="export">⬇ Export HTML</button>
+  </div>
+</header>
+
+<main>
+  <aside class="palette" id="palette">
+    <h2>Section Palette</h2>
+    <div class="ptiles" id="ptiles"></div>
+  </aside>
+
+  <section class="canvas-wrap">
+    <div class="canvas" id="canvas">
+      <div class="empty">Drag section tiles here to start building.<br>Each tile is a real slice of one of the 8 booking-page versions.</div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span id="stat">0 sections in canvas</span>
+  <span>Pocket Studio section mixer · 8 versions × 6 bands = 48 tiles</span>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const TILES = [
+  // version slug, display name, band count 6
+  ["01-rudys-booking","Rudy's Fremont"],
+  ["02-mykey-booking","MyKey (Rudy's)"],
+  ["03-booking-page","Booking v1"],
+  ["04-booking-page-alt","Booking v1 alt"],
+  ["05-mobile-barber","Mobile Barber"],
+  ["06-pocket-studio-static","Pocket Studio"],
+  ["07-projects-pocket-studio","Mykey Pocket"],
+  ["08-react-newest-classic","React Newest"]
+];
+const BANDS = 6;
+const canvas = document.getElementById('canvas');
+const ptiles = document.getElementById('ptiles');
+const stat = document.getElementById('stat');
+const KEY = 'booking-mixer-canvas-v1';
+
+function tileId(v,i){ return v+'_s'+i; }
+function tileSrc(v,i){ return 'tiles/'+v+'_s'+i+'.png'; }
+function verShort(v){ return v.split('-').slice(0,2).join('-'); }
+
+// build palette
+TILES.forEach(([v,name])=>{
+  const grp = document.createElement('div');
+  grp.style.gridColumn='1 / -1';
+  const h = document.createElement('h2');
+  h.textContent = name;
+  h.style.margin='6px 4px 4px';
+  grp.appendChild(h);
+  ptiles.appendChild(grp);
+  for(let i=1;i<=BANDS;i++){
+    const t = document.createElement('div');
+    t.className='ptile'; t.draggable=true;
+    t.dataset.v=v; t.dataset.i=i; t.dataset.src=tileSrc(v,i); t.dataset.name=name;
+    t.innerHTML = `<img src="${tileSrc(v,i)}" alt="${name} s${i}" loading="lazy">
+      <div class="lbl"><span>${name}</span><span class="ver">s${i}</span></div>`;
+    t.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain', JSON.stringify({src:tileSrc(v,i),v,name,i})); e.dataTransfer.effectAllowed='copy'; });
+    ptiles.appendChild(t);
+  }
+});
+
+function updateStat(){ stat.textContent = canvas.querySelectorAll('.crow').length + ' sections in canvas'; }
+function emptyCheck(){ if(!canvas.querySelector('.crow')){ if(!canvas.querySelector('.empty')){ const e=document.createElement('div'); e.className='empty'; e.innerHTML='Drag section tiles here to start building.<br>Each tile is a real slice of one of the 8 booking-page versions.'; canvas.appendChild(e);} } else { const e=canvas.querySelector('.empty'); if(e) e.remove(); } updateStat(); }
+
+function addRow(data, atTop){
+  canvas.querySelector('.empty')?.remove();
+  const row = document.createElement('div');
+  row.className='crow'; row.draggable=true;
+  row.innerHTML = `<span class="tag"><span class="v">${data.v}</span> · ${data.name} s${data.i}</span>
+    <img src="${data.src}" alt="">
+    <div class="ctl"><button title="move up" data-act="up">↑</button><button title="move down" data-act="down">↓</button><button title="remove" data-act="del">✕</button></div>`;
+  row.querySelector('[data-act=del]').onclick=()=>{row.remove();emptyCheck();};
+  row.querySelector('[data-act=up]').onclick=()=>{const p=row.previousElementSibling; if(p&&p.classList.contains('crow')) canvas.insertBefore(row,p);};
+  row.querySelector('[data-act=down]').onclick=()=>{const n=row.nextElementSibling; if(n&&n.classList.contains('crow')) canvas.insertBefore(n,row);};
+  row.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain','__row__'); row.classList.add('dragging'); });
+  row.addEventListener('dragend',()=>row.classList.remove('dragging'));
+  if(atTop && canvas.firstChild) canvas.insertBefore(row, canvas.firstChild); else canvas.appendChild(row);
+  emptyCheck();
+}
+
+// palette drag -> canvas
+canvas.addEventListener('dragover',e=>{ e.preventDefault(); canvas.classList.add('dragover'); });
+canvas.addEventListener('dragleave',()=>canvas.classList.remove('dragover'));
+canvas.addEventListener('drop',e=>{
+  e.preventDefault(); canvas.classList.remove('dragover');
+  const raw = e.dataTransfer.getData('text/plain');
+  if(!raw) return;
+  if(raw==='__row__') return; // row reorder handled separately
+  try{ addRow(JSON.parse(raw)); toast('section added'); }catch(_){}
+});
+
+// row reordering within canvas
+canvas.addEventListener('dragover',e=>{ if(e.dataTransfer.getData('text/plain')==='__row__') e.preventDefault(); });
+
+document.getElementById('clear').onclick=()=>{ canvas.querySelectorAll('.crow').forEach(r=>r.remove()); emptyCheck(); toast('cleared'); };
+document.getElementById('sample').onclick=()=>{
+  canvas.querySelectorAll('.crow').forEach(r=>r.remove());
+  [["06-pocket-studio-static",1],["02-mykey-booking",2],["06-pocket-studio-static",4],["07-projects-pocket-studio",3],["01-rudys-booking",3]].forEach(([v,i])=>{
+    const meta=TILES.find(t=>t[0]===v); addRow({src:tileSrc(v,i),v,name:meta[1],i});
+  });
+  toast('sample mix loaded');
+};
+document.getElementById('save').onclick=()=>{ const rows=[...canvas.querySelectorAll('.crow')].map(r=>({src:r.querySelector('img').src.split('/').pop(), v:r.querySelector('.tag .v').textContent, name:r.querySelector('.tag').textContent.split('·')[1]?.trim(), i:parseInt(r.dataset.i||'1')})); localStorage.setItem(KEY,JSON.stringify(rows)); toast('saved ('+rows.length+')'); };
+document.getElementById('load').onclick=()=>{ try{ const rows=JSON.parse(localStorage.getItem(KEY)); if(Array.isArray(rows)){ canvas.querySelectorAll('.crow').forEach(r=>r.remove()); rows.forEach(r=>addRow({src:'tiles/'+r.src, v:r.v, name:r.name||'', i:r.i})); toast('loaded'); } }catch(_){ toast('no save found'); } };
+document.getElementById('export').onclick=()=>{
+  const rows=[...canvas.querySelectorAll('.crow')];
+  if(!rows.length){ toast('canvas empty'); return; }
+  let body='';
+  rows.forEach(r=>{ const src=r.querySelector('img').src; body+=`<section style="margin:0"><img src="${src}" style="width:100%;display:block" alt=""></section>\n`; });
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Pocket Studio — Mixed Page</title><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;font-family:system-ui}</style></head><body>\n${body}</body></html>`;
+  const blob=new Blob([html],{type:'text/html'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='mixed-page.html'; a.click();
+  toast('exported mixed-page.html');
+};
+
+function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1400); }
+
+emptyCheck();
+</script>
+</body>
+</html>
