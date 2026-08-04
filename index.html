@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pocket Studio — Booking Page Versions (Drag & Drop Gallery)</title>
+<style>
+  :root{
+    --void:#120E17; --lime:#8ACE00; --paper:#f4f1ea; --ink:#1a1620;
+    --card:#fff; --line:#e3ded3; --muted:#6b6470;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"Inter",system-ui,-apple-system,sans-serif;
+    background:var(--paper); color:var(--ink); padding:32px 20px 80px;
+    -webkit-font-smoothing:antialiased;
+  }
+  header{max-width:1100px;margin:0 auto 8px}
+  h1{font-size:28px;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
+  h1 .dot{width:12px;height:12px;border-radius:50%;background:var(--lime);display:inline-block}
+  .sub{color:var(--muted);font-size:14px;margin-top:6px;max-width:680px;line-height:1.5}
+  .hint{
+    max-width:1100px;margin:18px auto;background:#fff;border:1px solid var(--line);
+    border-radius:12px;padding:12px 16px;font-size:13px;color:var(--muted);
+    display:flex;gap:10px;align-items:center
+  }
+  .hint b{color:var(--ink)}
+  .grid{
+    max-width:1100px;margin:0 auto;display:grid;gap:18px;
+    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  }
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;
+    box-shadow:0 1px 3px rgba(0,0,0,.05);cursor:grab;transition:transform .12s ease, box-shadow .12s ease;
+    position:relative;user-select:none;
+  }
+  .card:active{cursor:grabbing}
+  .card.dragging{opacity:.45;transform:scale(.98);box-shadow:0 12px 30px rgba(0,0,0,.18)}
+  .card.over{border-color:var(--lime);box-shadow:0 0 0 2px var(--lime)}
+  .thumb{position:relative;background:#eee;aspect-ratio:1280/1000;overflow:hidden}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+  .num{
+    position:absolute;top:10px;left:10px;background:var(--void);color:#fff;font-size:12px;
+    font-weight:700;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center
+  }
+  .grip{
+    position:absolute;top:10px;right:10px;background:rgba(255,255,255,.92);border-radius:8px;
+    padding:4px 8px;font-size:13px;color:var(--muted);letter-spacing:1px
+  }
+  .meta{padding:14px 16px 16px}
+  .meta .name{font-weight:700;font-size:15px;letter-spacing:-.01em}
+  .meta .src{font-size:12px;color:var(--muted);margin-top:4px;font-family:ui-monospace,monospace;word-break:break-all}
+  .meta .tag{
+    display:inline-block;margin-top:8px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;
+    background:#eef7df;color:#4d6b00
+  }
+  .toolbar{max-width:1100px;margin:0 auto 14px;display:flex;gap:10px;flex-wrap:wrap}
+  .btn{
+    font:inherit;font-size:13px;font-weight:600;border:1px solid var(--line);background:#fff;
+    border-radius:10px;padding:8px 14px;cursor:pointer;color:var(--ink)
+  }
+  .btn:hover{background:#f7f5ef}
+  footer{max-width:1100px;margin:40px auto 0;color:var(--muted);font-size:12px;text-align:center}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1><span class="dot"></span>Pocket Studio — Booking Page Versions</h1>
+  <p class="sub">Every iteration of the MyKey / Pocket Studio booking page we built across Kimi, local projects, archives, and GitHub. Drag any card to reorder. Order is saved in your browser.</p>
+</header>
+
+<div class="hint">
+  <span>🖱️</span><span><b>Drag &amp; drop</b> to rearrange. Click a thumbnail to open the live version. Your order persists on this device.</span>
+</div>
+
+<div class="toolbar">
+  <button class="btn" id="reset">↺ Reset order</button>
+  <button class="btn" id="shuffle">🔀 Shuffle</button>
+  <span id="count" style="align-self:center;color:var(--muted);font-size:13px"></span>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<footer>Screenshots rendered from local source at 1280×1000 · 8 distinct versions catalogued</footer>
+
+<script>
+const VERSIONS = [
+  {img:"01-rudys-booking.png", name:"Rudy's Fremont Booking", src:"archive/projects/rudys-booking/index.html", tag:"Rudy's era · multi-stylist", url:"https://pocketkimimon.github.io/pocket-studio-booking/"},
+  {img:"02-mykey-booking.png", name:"MyKey Booking (Rudy's brand)", src:"booking-archive/mykey-booking/index.html", tag:"Early MyKey rebrand"},
+  {img:"03-booking-page.png", name:"Booking Page v1", src:"booking-archive/booking-page/index.html", tag:"'Book with Me' gen 1"},
+  {img:"04-booking-page-alt.png", name:"Booking Page v1 (alt)", src:"booking-archive/booking-page-alt/index.html", tag:"'Book with Me' variant"},
+  {img:"05-mobile-barber.png", name:"Mobile Barber Booking", src:"archive/projects/mobile-barber-booking/index.html", tag:"Mobile-barber spin"},
+  {img:"06-pocket-studio-static.png", name:"Pocket Studio (current static)", src:"booking-archive/pocket-studio-static/index.html", tag:"Live deploy · current", url:"https://pocketkimimon.github.io/pocket-studio-booking/"},
+  {img:"07-projects-pocket-studio.png", name:"Mykey Pocket — Hair Artist", src:"projects/pocket-studio/index.html", tag:"projects/ snapshot"},
+  {img:"08-react-newest-classic.png", name:"React Newest (classic)", src:"booking-archive/react-newest/public/classic/index.html", tag:"Latest React build"}
+];
+
+const grid = document.getElementById('grid');
+const KEY = 'booking-gallery-order-v1';
+let order = loadOrder();
+
+function loadOrder(){
+  try{ const s = JSON.parse(localStorage.getItem(KEY)); if(Array.isArray(s) && s.length===VERSIONS.length) return s; }catch(e){}
+  return VERSIONS.map((_,i)=>i);
+}
+function saveOrder(){ localStorage.setItem(KEY, JSON.stringify(order)); }
+
+function render(){
+  grid.innerHTML='';
+  order.forEach((idx,pos)=>{
+    const v = VERSIONS[idx];
+    const card = document.createElement('div');
+    card.className='card';
+    card.draggable=true;
+    card.dataset.idx=idx;
+    card.innerHTML = `
+      <div class="thumb">
+        <span class="num">${pos+1}</span>
+        <span class="grip">⠿ drag</span>
+        <img src="${v.img}" alt="${v.name}" loading="lazy">
+      </div>
+      <div class="meta">
+        <div class="name">${v.name}</div>
+        <div class="src">${v.src}</div>
+        <span class="tag">${v.tag}</span>
+      </div>`;
+    if(v.url){
+      card.querySelector('img').addEventListener('click',()=>window.open(v.url,'_blank'));
+      card.querySelector('.thumb').style.cursor='pointer';
+    }
+    grid.appendChild(card);
+  });
+  document.getElementById('count').textContent = order.length + ' versions';
+  bindDnD();
+}
+
+let dragEl=null;
+function bindDnD(){
+  document.querySelectorAll('.card').forEach(card=>{
+    card.addEventListener('dragstart',e=>{
+      dragEl=card; card.classList.add('dragging');
+      e.dataTransfer.effectAllowed='move';
+      try{e.dataTransfer.setData('text/plain',card.dataset.idx);}catch(_){}
+    });
+    card.addEventListener('dragend',()=>{
+      card.classList.remove('dragging');
+      document.querySelectorAll('.card').forEach(c=>c.classList.remove('over'));
+      dragEl=null;
+    });
+    card.addEventListener('dragover',e=>{ e.preventDefault(); card.classList.add('over'); });
+    card.addEventListener('dragleave',()=>card.classList.remove('over'));
+    card.addEventListener('drop',e=>{
+      e.preventDefault();
+      if(!dragEl || dragEl===card) return;
+      const from = order.indexOf(+dragEl.dataset.idx);
+      const to = order.indexOf(+card.dataset.idx);
+      order.splice(to,0,order.splice(from,1)[0]);
+      saveOrder(); render();
+    });
+  });
+}
+
+document.getElementById('reset').addEventListener('click',()=>{ order=VERSIONS.map((_,i)=>i); saveOrder(); render(); });
+document.getElementById('shuffle').addEventListener('click',()=>{
+  for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
+  saveOrder(); render();
+});
+
+render();
+</script>
+</body>
+</html>
