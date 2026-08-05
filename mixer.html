@@ -72,7 +72,7 @@
 
   <section class="canvas-wrap">
     <div class="canvas" id="canvas">
-      <div class="empty">Drag section tiles here to start building.<br>Each tile is a real slice of one of the 8 booking-page versions.</div>
+      <div class="empty">Drag section tiles here to start building.<br>Each tile is a real slice of one of the 20 booking-page versions.</div>
     </div>
   </section>
 </main>
@@ -139,9 +139,11 @@ TILES.forEach(([v,name])=>{
 });
 
 function updateStat(){ stat.textContent = canvas.querySelectorAll('.crow').length + ' sections in canvas'; }
-function emptyCheck(){ if(!canvas.querySelector('.crow')){ if(!canvas.querySelector('.empty')){ const e=document.createElement('div'); e.className='empty'; e.innerHTML='Drag section tiles here to start building.<br>Each tile is a real slice of one of the 17 booking-page versions.'; canvas.appendChild(e);} } else { const e=canvas.querySelector('.empty'); if(e) e.remove(); } updateStat(); }
+function emptyCheck(){ if(!canvas.querySelector('.crow')){ if(!canvas.querySelector('.empty')){ const e=document.createElement('div'); e.className='empty'; e.innerHTML='Drag section tiles here to start building.<br>Each tile is a real slice of one of the 20 booking-page versions.'; canvas.appendChild(e);} } else { const e=canvas.querySelector('.empty'); if(e) e.remove(); } updateStat(); }
 
 // palette drag -> canvas (insert at cursor, or append)
+canvas.addEventListener('dragover',e=>{ e.preventDefault(); canvas.classList.add('dragover'); });
+canvas.addEventListener('dragleave',e=>{ if(e.target===canvas) canvas.classList.remove('dragover'); });
 canvas.addEventListener('drop',e=>{
   e.preventDefault(); canvas.classList.remove('dragover');
   const raw = e.dataTransfer.getData('text/plain');
@@ -206,7 +208,7 @@ window.addRow = function(data, atTop){
 document.getElementById('clear').onclick=()=>{ canvas.querySelectorAll('.crow').forEach(r=>r.remove()); emptyCheck(); toast('cleared'); };
 document.getElementById('sample').onclick=()=>{
   canvas.querySelectorAll('.crow').forEach(r=>r.remove());
-  [["06-pocket-studio-static",1],["02-mykey-booking",2],["06-pocket-studio-static",4],["07-projects-pocket-studio",3],["01-rudys-booking",3]].forEach(([v,i])=>{
+  [["v13",1],["v06",2],["v13",4],["v11",3],["v08",3]].forEach(([v,i])=>{
     const meta=TILES.find(t=>t[0]===v); addRow({src:tileSrc(v,i),v,name:meta[1],i});
   });
   toast('sample mix loaded');
