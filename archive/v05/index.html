@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book with Me</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-2: #818cf8;
+            --success: #22c55e;
+            --danger: #ef4444;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 2rem 1rem; }
+        header { text-align: center; margin-bottom: 2rem; }
+        header h1 { font-size: 2.5rem; margin: 0; background: linear-gradient(90deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        header p { color: var(--muted); margin-top: 0.5rem; }
+        .card {
+            background: var(--card);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .card h2 { margin-top: 0; font-size: 1.25rem; color: var(--accent); }
+        .services { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+        @media (max-width: 480px) { .services { grid-template-columns: 1fr; } }
+        .service {
+            background: #334155;
+            border: 2px solid transparent;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .service:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .service.selected { border-color: var(--accent); background: #1e3a5f; }
+        .service h3 { margin: 0 0 0.25rem; font-size: 1rem; }
+        .service .price { color: var(--accent); font-weight: bold; }
+        .service .desc { color: var(--muted); font-size: 0.875rem; }
+        label { display: block; margin-bottom: 0.5rem; color: var(--muted); font-size: 0.875rem; }
+        input, select, textarea, button {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #475569;
+            background: #0f172a;
+            color: var(--text);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+        textarea { min-height: 80px; resize: vertical; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+        .grid-2 > div { margin-bottom: 0; }
+        .grid-2 input, .grid-2 select { margin-bottom: 0; }
+        .slots { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+        .slot {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            background: #334155;
+            border: 1px solid #475569;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        .slot:hover { border-color: var(--accent); }
+        .slot.selected { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: bold; }
+        .slot.disabled { opacity: 0.4; cursor: not-allowed; text-decoration: line-through; }
+        button.primary {
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 1rem;
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+        }
+        button.primary:hover { opacity: 0.9; }
+        button.primary:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(0.7); }
+        button.secondary {
+            background: transparent;
+            border: 1px solid #475569;
+            color: var(--muted);
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            width: auto;
+        }
+        .summary { background: #0f172a; border-radius: 0.75rem; padding: 1rem; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+        .summary-row.total { font-size: 1.25rem; font-weight: bold; border-top: 1px solid #475569; padding-top: 0.75rem; margin-top: 0.75rem; }
+        .hidden { display: none; }
+        .toast {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            background: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transform: translateY(120%);
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+        .toast.show { transform: translateY(0); }
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+            display: none; align-items: center; justify-content: center;
+            padding: 1rem; z-index: 50;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal {
+            background: var(--card); border-radius: 1rem; padding: 1.5rem;
+            max-width: 500px; width: 100%; max-height: 90vh; overflow: auto;
+        }
+        .modal h3 { margin-top: 0; color: var(--accent); }
+        .modal-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
+        .modal-actions button { flex: 1; margin: 0; }
+        .admin-toggle { position: fixed; bottom: 1rem; left: 1rem; color: var(--muted); font-size: 0.75rem; cursor: pointer; opacity: 0.5; }
+        .admin-toggle:hover { opacity: 1; color: var(--accent); }
+        .bookings-list { margin-top: 1rem; }
+        .booking-item {
+            background: #0f172a;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .booking-item button {
+            width: auto;
+            margin: 0;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.875rem;
+            background: var(--danger);
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+        }
+        .empty { color: var(--muted); text-align: center; padding: 1rem; }
+        .notice { background: #0f172a; border-left: 4px solid var(--accent); padding: 1rem; border-radius: 0 0.5rem 0.5rem 0; color: var(--muted); font-size: 0.875rem; }
+        .notice strong { color: var(--text); }
+        .config-row { display: flex; gap: 0.75rem; align-items: flex-end; margin-bottom: 1rem; }
+        .config-row input { flex: 1; margin-bottom: 0; }
+        .config-row button { width: auto; margin-bottom: 0; }
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.75rem; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .modal-actions { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 id="businessName">Book with Me</h1>
+            <p id="businessTagline">Book your appointment online.</p>
+        </header>
+
+        <section class="card">
+            <h2>1. Pick a service</h2>
+            <div class="services" id="services"></div>
+        </section>
+
+        <section class="card">
+            <h2>2. Choose date & time</h2>
+            <div class="grid-2">
+                <div>
+                    <label for="date">Date</label>
+                    <input type="date" id="date">
+                </div>
+                <div>
+                    <label>Available slots</label>
+                    <div class="slots" id="slots">
+                        <span class="empty">Select a date first</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>3. Your details</h2>
+            <div class="grid-2">
+                <div>
+                    <label for="name">Name</label>
+                    <input type="text" id="name" placeholder="Jane Doe">
+                </div>
+                <div>
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="jane@example.com">
+                </div>
+            </div>
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" placeholder="(555) 123-4567">
+            <label for="notes">Notes (optional)</label>
+            <textarea id="notes" placeholder="Anything I should know?"></textarea>
+        </section>
+
+        <section class="card">
+            <h2>Booking summary</h2>
+            <div class="summary" id="summary">
+                <div class="summary-row"><span>Service</span><span>—</span></div>
+                <div class="summary-row"><span>Date</span><span>—</span></div>
+                <div class="summary-row"><span>Time</span><span>—</span></div>
+                <div class="summary-row total"><span>Total</span><span>—</span></div>
+            </div>
+            <button class="primary" id="bookBtn" disabled>Complete booking</button>
+        </section>
+
+        <section class="card" id="yourBookings">
+            <h2>Your bookings</h2>
+            <div id="bookingsList" class="bookings-list">
+                <div class="empty">No bookings yet.</div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Connect to my calendar</h2>
+            <div class="notice">
+                <strong>Apple Calendar ready</strong><br>
+                After you book, you'll receive a confirmation email with an Apple Calendar (.ics) file you can open to add the appointment directly to your iPhone or Mac calendar.
+            </div>
+        </section>
+    </div>
+
+    <div class="toast" id="toast">Booking requested!</div>
+
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal">
+            <h3>Booking requested</h3>
+            <p>Your booking details are ready. Click below to send the request to the provider and download your calendar invite.</p>
+            <div class="summary" id="modalSummary"></div>
+            <div class="modal-actions">
+                <button class="primary" onclick="sendAndDownload()">Send request & add to calendar</button>
+                <button class="secondary" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-toggle" onclick="toggleAdmin()">⚙️ Admin</div>
+
+    <div class="modal-overlay" id="adminModal">
+        <div class="modal">
+            <h3>Provider settings</h3>
+            <p>Set your email and block unavailable time slots.</p>
+            <label for="providerEmail">Your email for booking requests</label>
+            <div class="config-row">
+                <input type="email" id="providerEmail" placeholder="you@icloud.com">
+                <button class="secondary" onclick="saveConfig()">Save</button>
+            </div>
+            <label for="calendarUrl">Public iCloud calendar URL (optional)</label>
+            <input type="url" id="calendarUrl" placeholder="https://calendar.icloud.com/...">
+            <button class="secondary" onclick="saveConfig()">Save calendar link</button>
+            <hr style="border-color: #475569; margin: 1.5rem 0;">
+            <p><strong>Block time slots</strong></p>
+            <input type="date" id="adminDate">
+            <div class="slots" id="adminSlots"></div>
+            <div class="modal-actions">
+                <button class="secondary" onclick="closeAdmin()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============ CONFIG (edit these or use the UI) ============
+        const DEFAULT_CONFIG = {
+            businessName: 'Book with Me',
+            businessTagline: 'Book your appointment online.',
+            providerEmail: 'MYKEYPOCKET@ICLOUD.COM',
+            services: [
+                { id: 'consult', name: 'Consultation', price: 0, duration: 30, desc: 'Free discovery call' },
+                { id: 'cut', name: 'Standard Appointment', price: 45, duration: 60, desc: 'Classic service' },
+                { id: 'premium', name: 'Premium Session', price: 95, duration: 90, desc: 'Full treatment' },
+                { id: 'group', name: 'Group Booking', price: 150, duration: 120, desc: 'Up to 4 people' }
+            ],
+            timeSlots: [
+                '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+                '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00'
+            ],
+            calendarUrl: ''
+        };
+
+        const state = {
+            get config() {
+                const saved = localStorage.getItem('bookitConfig');
+                return saved ? { ...DEFAULT_CONFIG, ...JSON.parse(saved) } : DEFAULT_CONFIG;
+            },
+            set config(val) {
+                localStorage.setItem('bookitConfig', JSON.stringify(val));
+            },
+            get bookings() {
+                return JSON.parse(localStorage.getItem('bookitBookings') || '[]');
+            },
+            set bookings(val) {
+                localStorage.setItem('bookitBookings', JSON.stringify(val));
+            },
+            get blocked() {
+                return JSON.parse(localStorage.getItem('bookitBlocked') || '{}');
+            },
+            set blocked(val) {
+                localStorage.setItem('bookitBlocked', JSON.stringify(val));
+            }
+        };
+
+        let selectedService = null;
+        let selectedDate = '';
+        let selectedTime = '';
+        let pendingBooking = null;
+
+        function init() {
+            const cfg = state.config;
+            document.getElementById('businessName').textContent = cfg.businessName;
+            document.getElementById('businessTagline').textContent = cfg.businessTagline;
+            document.getElementById('providerEmail').value = cfg.providerEmail;
+            document.getElementById('calendarUrl').value = cfg.calendarUrl || '';
+
+            document.getElementById('date').min = new Date().toISOString().split('T')[0];
+            document.getElementById('adminDate').min = new Date().toISOString().split('T')[0];
+
+            renderServices();
+            renderBookings();
+            updateSummary();
+
+            document.getElementById('date').addEventListener('change', e => {
+                selectedDate = e.target.value;
+                selectedTime = '';
+                renderSlots();
+                updateSummary();
+                validate();
+            });
+
+            ['name', 'email', 'phone', 'notes'].forEach(id => {
+                document.getElementById(id).addEventListener('input', validate);
+            });
+
+            document.getElementById('adminDate').addEventListener('change', renderAdminSlots);
+
+            document.getElementById('bookBtn').addEventListener('click', () => {
+                const cfg = state.config;
+                if (cfg.providerEmail === 'you@example.com') {
+                    showToast('Set your email in "Connect to my calendar" first');
+                    document.getElementById('providerEmail').focus();
+                    return;
+                }
+                prepareBooking();
+            });
+        }
+
+        function renderServices() {
+            const container = document.getElementById('services');
+            const cfg = state.config;
+            container.innerHTML = cfg.services.map(s => `
+                <div class="service" data-id="${s.id}" onclick="selectService('${s.id}')">
+                    <h3>${s.name}</h3>
+                    <div class="price">${s.price === 0 ? 'Free' : '$' + s.price}</div>
+                    <div class="desc">${s.duration} min · ${s.desc}</div>
+                </div>
+            `).join('');
+        }
+
+        function selectService(id) {
+            selectedService = state.config.services.find(s => s.id === id);
+            document.querySelectorAll('.service').forEach(el => {
+                el.classList.toggle('selected', el.dataset.id === id);
+            });
+            updateSummary();
+            validate();
+        }
+
+        function renderSlots() {
+            const container = document.getElementById('slots');
+            const cfg = state.config;
+            if (!selectedDate) {
+                container.innerHTML = '<span class="empty">Select a date first</span>';
+                return;
+            }
+            const blocked = state.blocked[selectedDate] || [];
+            const taken = state.bookings
+                .filter(b => b.date === selectedDate)
+                .map(b => b.time);
+            container.innerHTML = cfg.timeSlots.map(t => {
+                const disabled = taken.includes(t) || blocked.includes(t);
+                const sel = selectedTime === t ? 'selected' : '';
+                return `<span class="slot ${sel} ${disabled ? 'disabled' : ''}" onclick="selectTime('${t}', ${disabled})">${t}</span>`;
+            }).join('');
+        }
+
+        function selectTime(time, disabled) {
+            if (disabled) return;
+            selectedTime = selectedTime === time ? '' : time;
+            renderSlots();
+            updateSummary();
+            validate();
+        }
+
+        function updateSummary() {
+            const summary = document.getElementById('summary');
+            summary.innerHTML = `
+                <div class="summary-row"><span>Service</span><span>${selectedService ? selectedService.name : '—'}</span></div>
+                <div class="summary-row"><span>Date</span><span>${selectedDate ? formatDate(selectedDate) : '—'}</span></div>
+                <div class="summary-row"><span>Time</span><span>${selectedTime || '—'}</span></div>
+                <div class="summary-row total"><span>Total</span><span>${selectedService ? (selectedService.price === 0 ? 'Free' : '$' + selectedService.price) : '—'}</span></div>
+            `;
+        }
+
+        function formatDate(d) {
+            return new Date(d + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+        }
+
+        function validate() {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const valid = selectedService && selectedDate && selectedTime && name && email.includes('@');
+            document.getElementById('bookBtn').disabled = !valid;
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function prepareBooking() {
+            const cfg = state.config;
+            const clientName = document.getElementById('name').value.trim();
+            const clientEmail = document.getElementById('email').value.trim();
+            const clientPhone = document.getElementById('phone').value.trim();
+            const notes = document.getElementById('notes').value.trim();
+
+            const startDate = new Date(`${selectedDate}T${selectedTime}`);
+            const endDate = new Date(startDate.getTime() + selectedService.duration * 60000);
+
+            pendingBooking = {
+                service: selectedService.name,
+                price: selectedService.price,
+                duration: selectedService.duration,
+                date: selectedDate,
+                time: selectedTime,
+                endTime: endDate.toTimeString().slice(0, 5),
+                name: clientName,
+                email: clientEmail,
+                phone: clientPhone,
+                notes: notes
+            };
+
+            document.getElementById('modalSummary').innerHTML = `
+                <div class="summary-row"><span>Service</span><span>${pendingBooking.service}</span></div>
+                <div class="summary-row"><span>Date</span><span>${formatDate(pendingBooking.date)}</span></div>
+                <div class="summary-row"><span>Time</span><span>${pendingBooking.time} – ${pendingBooking.endTime}</span></div>
+                <div class="summary-row"><span>Client</span><span>${pendingBooking.name}</span></div>
+                <div class="summary-row"><span>Email</span><span>${pendingBooking.email}</span></div>
+            `;
+
+            document.getElementById('confirmModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('confirmModal').classList.remove('show');
+            pendingBooking = null;
+        }
+
+        function generateICS(booking) {
+            const start = new Date(`${booking.date}T${booking.time}`);
+            const end = new Date(start.getTime() + booking.duration * 60000);
+            const dt = (d) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+            const uid = 'booking-' + Date.now() + '@bookit';
+
+            return `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//BookIt//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:${uid}
+DTSTAMP:${dt(new Date())}
+DTSTART:${dt(start)}
+DTEND:${dt(end)}
+SUMMARY:Appointment: ${booking.service}
+DESCRIPTION:Client: ${booking.name}\\nEmail: ${booking.email}\\nPhone: ${booking.phone || 'N/A'}\\nNotes: ${booking.notes || 'None'}
+END:VEVENT
+END:VCALENDAR`;
+        }
+
+        function downloadICS(filename, content) {
+            const blob = new Blob([content], { type: 'text/calendar' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function sendAndDownload() {
+            if (!pendingBooking) return;
+            const cfg = state.config;
+            const bookings = state.bookings;
+            bookings.push(pendingBooking);
+            state.bookings = bookings;
+
+            const ics = generateICS(pendingBooking);
+            downloadICS(`booking-${pendingBooking.date}-${pendingBooking.time}.ics`, ics);
+
+            const subject = `New booking request: ${pendingBooking.service} on ${pendingBooking.date}`;
+            const body = `Hi,\\n\\nYou have a new booking request:\\n\\nService: ${pendingBooking.service}\\nDate: ${pendingBooking.date}\\nTime: ${pendingBooking.time} – ${pendingBooking.endTime}\\nClient: ${pendingBooking.name}\\nEmail: ${pendingBooking.email}\\nPhone: ${pendingBooking.phone || 'N/A'}\\nNotes: ${pendingBooking.notes || 'None'}\\n\\nAttached .ics file can be added to your iCloud calendar.\\n`;
+            window.location.href = `mailto:${cfg.providerEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+            closeModal();
+            renderBookings();
+            renderSlots();
+            showToast('Booking requested! Check your email.');
+
+            // Reset form
+            document.getElementById('name').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('notes').value = '';
+            selectedService = null;
+            selectedTime = '';
+            document.querySelectorAll('.service').forEach(el => el.classList.remove('selected'));
+            updateSummary();
+            validate();
+        }
+
+        function renderBookings() {
+            const list = document.getElementById('bookingsList');
+            const bookings = state.bookings;
+            if (!bookings.length) {
+                list.innerHTML = '<div class="empty">No bookings yet.</div>';
+                return;
+            }
+            list.innerHTML = bookings.map((b, i) => `
+                <div class="booking-item">
+                    <div>
+                        <strong>${b.service}</strong><br>
+                        <span style="color: var(--muted); font-size: 0.875rem;">${formatDate(b.date)} at ${b.time} · ${b.name}</span>
+                    </div>
+                    <button onclick="cancelBooking(${i})">Cancel</button>
+                </div>
+            `).join('');
+        }
+
+        function cancelBooking(index) {
+            const bookings = state.bookings;
+            bookings.splice(index, 1);
+            state.bookings = bookings;
+            renderBookings();
+            renderSlots();
+            showToast('Booking cancelled');
+        }
+
+        function saveConfig() {
+            const cfg = state.config;
+            cfg.providerEmail = document.getElementById('providerEmail').value.trim() || 'you@example.com';
+            cfg.calendarUrl = document.getElementById('calendarUrl').value.trim();
+            state.config = cfg;
+            showToast('Settings saved');
+        }
+
+        // Admin
+        function toggleAdmin() {
+            document.getElementById('adminModal').classList.add('show');
+        }
+        function closeAdmin() {
+            document.getElementById('adminModal').classList.remove('show');
+        }
+        function renderAdminSlots() {
+            const date = document.getElementById('adminDate').value;
+            const container = document.getElementById('adminSlots');
+            const cfg = state.config;
+            if (!date) {
+                container.innerHTML = '<span class="empty">Select a date</span>';
+                return;
+            }
+            const blocked = state.blocked[date] || [];
+            container.innerHTML = cfg.timeSlots.map(t => {
+                const isBlocked = blocked.includes(t);
+                return `<span class="slot ${isBlocked ? 'selected' : ''}" onclick="toggleBlocked('${date}', '${t}')">${t}</span>`;
+            }).join('');
+        }
+        function toggleBlocked(date, time) {
+            const blocked = { ...state.blocked };
+            if (!blocked[date]) blocked[date] = [];
+            if (blocked[date].includes(time)) {
+                blocked[date] = blocked[date].filter(t => t !== time);
+            } else {
+                blocked[date].push(time);
+            }
+            if (!blocked[date].length) delete blocked[date];
+            state.blocked = blocked;
+            renderAdminSlots();
+            if (selectedDate === date) renderSlots();
+        }
+
+        init();
+    </script>
+</body>
+</html>

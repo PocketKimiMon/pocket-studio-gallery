@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<!-- @dsCard group="UI Kit — Monster Survivor" name="Monster Survivor (game)" subtitle="HUD + level-up + pause menus, neon arena" viewport="900x560" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monster Survivor — PocketStudio Arcade</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body { background: #0C0A12; color: var(--fg1); font-family: var(--font-sans); overflow: hidden; -webkit-font-smoothing: antialiased; }
+  button { font-family: inherit; cursor: pointer; }
+  #app, .ms-stage { position: fixed; inset: 0; }
+
+  .ms-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .ms-grain { position: absolute; inset: 0; background-image: var(--grain); background-size: 200px 200px; opacity: 0.16; mix-blend-mode: soft-light; pointer-events: none; }
+
+  /* ---- HUD ---- */
+  .ms-hud { position: absolute; inset: 0; pointer-events: none; display: flex; flex-direction: column; }
+  .ms-hud > * { pointer-events: auto; }
+  .ms-hud-top { display: flex; align-items: center; gap: 12px; padding: 14px 16px calc(14px + env(safe-area-inset-top)); }
+  .ms-resources { display: flex; gap: 8px; flex: 1; flex-wrap: wrap; }
+  .ms-chip { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 999px;
+    background: rgba(12,10,18,0.7); backdrop-filter: blur(8px); border: 1px solid var(--hairline);
+    font-family: var(--font-mono); font-weight: 700; font-size: 13px; letter-spacing: 0.02em; }
+  .ms-timer { font-family: var(--font-mono); font-weight: 700; font-size: 26px; letter-spacing: 0.04em;
+    color: var(--fg1); text-shadow: 0 0 16px rgba(47,230,224,0.5); }
+  .ms-pause { width: 44px; height: 44px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(12,10,18,0.7); backdrop-filter: blur(8px); border: 1px solid var(--border); color: var(--fg1); }
+
+  .ms-bars { margin-top: auto; display: flex; flex-direction: column; gap: 8px; padding: 0 16px 8px; }
+  .ms-bar-track { height: 16px; border-radius: 999px; background: rgba(12,10,18,0.7); border: 1px solid var(--hairline); overflow: hidden; }
+  .ms-bar-fill { height: 100%; border-radius: 999px; transition: width var(--dur-slow) var(--ease-out); }
+  .ms-bar-meta { display: flex; justify-content: space-between; margin-top: 3px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg2); }
+
+  .ms-abilities { display: flex; gap: 8px; padding: 4px 16px calc(18px + env(safe-area-inset-bottom)); }
+  .ms-ability { position: relative; width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
+    background: rgba(12,10,18,0.72); backdrop-filter: blur(8px); border: 1.5px solid var(--border); }
+  .ms-ability-lvl { position: absolute; bottom: -4px; right: -4px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 999px;
+    background: var(--ink-800); border: 1.5px solid var(--lime); color: var(--lime); font-family: var(--font-mono); font-weight: 700; font-size: 11px;
+    display: flex; align-items: center; justify-content: center; }
+  .ms-ability-empty { border-style: dashed; color: var(--fg3); }
+
+  /* ---- shared buttons ---- */
+  .ms-btn { min-height: 50px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 0 22px;
+    border-radius: var(--radius-pill); font-weight: 800; font-size: 16px; border: 2px solid transparent; white-space: nowrap;
+    transition: transform var(--dur-fast) var(--ease-spring), box-shadow var(--dur-base); }
+  .ms-btn:active { transform: scale(.96); }
+  .ms-btn-block { width: 100%; }
+  .ms-btn-go { background: var(--lime); color: var(--on-neon); box-shadow: var(--glow-lime); }
+  .ms-btn-ghost { background: rgba(12,10,18,0.6); color: var(--fg1); border-color: var(--border); }
+
+  .ms-kicker { font-family: var(--font-mono); font-weight: 700; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--coral-bright); }
+
+  /* ---- overlays ---- */
+  .ms-screen { position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 28px 22px calc(28px + env(safe-area-inset-bottom)); text-align: center;
+    background: radial-gradient(circle at 50% 40%, rgba(12,10,18,0.72), rgba(8,6,13,0.94)); backdrop-filter: blur(8px); }
+
+  /* title */
+  .ms-title-h { font-family: var(--font-display); font-weight: 900; font-size: clamp(3.2rem, 15vw, 6rem); line-height: 0.85; letter-spacing: -0.045em; text-transform: uppercase; margin: 14px 0; color: var(--fg1); }
+  .ms-title-h span { color: var(--coral); text-shadow: 0 0 18px rgba(232,72,63,0.4); }
+  .ms-title-tag { font-size: 17px; color: var(--fg2); max-width: 320px; }
+  .ms-title-actions { display: flex; flex-direction: column; gap: 12px; margin-top: 28px; width: 100%; max-width: 300px; }
+  .ms-title-foot { display: flex; gap: 18px; margin-top: 26px; }
+  .ms-meta { font-family: var(--font-mono); font-size: 12px; color: var(--fg3); }
+
+  /* level up — text-heavy menu */
+  .ms-levelup { justify-content: flex-start; padding-top: 40px; overflow-y: auto; }
+  .ms-levelup-head { margin-bottom: 20px; }
+  .ms-levelup-h { font-family: var(--font-serif); font-weight: 700; font-size: var(--text-3xl); letter-spacing: -0.02em; margin-top: 8px; text-wrap: balance; }
+  .ms-cards { display: grid; grid-template-columns: 1fr; gap: 12px; width: 100%; max-width: 720px; }
+  .ms-card { text-align: left; background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-lg); padding: 18px;
+    transition: transform var(--dur-base) var(--ease-spring), border-color var(--dur-base), box-shadow var(--dur-base); }
+  .ms-card:hover { transform: translateY(-3px); border-color: var(--lime); box-shadow: var(--glow-lime); }
+  .ms-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .ms-card-ic { display: inline-flex; width: 50px; height: 50px; align-items: center; justify-content: center; border-radius: 13px; background: var(--ink-700); }
+  .ms-card-tier { font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+  .ms-card-name { font-family: var(--font-serif); font-weight: 700; font-size: 22px; letter-spacing: -0.01em; margin-bottom: 6px; }
+  .ms-card-desc { font-size: 15px; color: var(--fg2); line-height: 1.55; }
+  .ms-pips { display: flex; gap: 5px; margin-top: 14px; }
+  .ms-pip { width: 26px; height: 6px; border-radius: 999px; }
+  .ms-skip { margin-top: 18px; background: none; border: none; color: var(--fg3); font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.04em; text-decoration: underline; }
+
+  /* pause */
+  .ms-pause-card { width: 100%; max-width: 440px; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 24px; text-align: left; }
+  .ms-pause-h { font-family: var(--font-serif); font-weight: 700; font-size: var(--text-2xl); letter-spacing: -0.02em; margin: 8px 0 18px; text-wrap: balance; }
+  .ms-settings { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .ms-setting { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 13px 15px; }
+  .ms-setting > div { display: flex; flex-direction: column; gap: 2px; }
+  .ms-setting strong { font-size: 14px; }
+  .ms-setting span { font-size: 12px; color: var(--fg3); }
+  .ms-toggle-pill { font-family: var(--font-mono); font-size: 12px; font-weight: 700; padding: 7px 13px; border-radius: 999px; background: var(--surface-2); color: var(--fg2); border: 1px solid var(--border); }
+  .ms-toggle-pill.ms-on { background: color-mix(in oklab, var(--lime) 16%, transparent); color: var(--lime); border-color: transparent; }
+  .ms-pause-actions { display: flex; flex-direction: column; gap: 10px; }
+
+  @media (min-width: 720px) {
+    .ms-cards { grid-template-columns: repeat(3, 1fr); }
+    .ms-card { display: flex; flex-direction: column; }
+    .ms-card-desc { flex: 1; }
+  }
+</style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="../../assets/reading-mode-toggle.kit.jsx"></script>
+  <script type="text/babel" src="../../assets/icons.jsx"></script>
+  <script type="text/babel" src="Arena.jsx"></script>
+  <script type="text/babel" src="HUD.jsx"></script>
+  <script type="text/babel" src="Menus.jsx"></script>
+  <script type="text/babel">
+    const { useState } = React;
+    // game "state": title | playing | levelup | paused
+    function App() {
+      const [state, setState] = useState('title');
+      const paused = state !== 'playing';
+      return (
+        <div className="ms-stage">
+          <Arena paused={paused} />
+          <div className="ms-grain" />
+          {state !== 'title' && <HUD onPause={() => setState('paused')} />}
+          {state === 'title' && <TitleScreen onPlay={() => setState('levelup')} />}
+          {state === 'levelup' && <LevelUpMenu onPick={() => setState('playing')} />}
+          {state === 'paused' && <PauseMenu onResume={() => setState('playing')} onQuit={() => setState('title')} />}
+          {state === 'playing' && (
+            <button className="ms-demo-hint" onClick={() => setState('levelup')}
+              style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,80px)',zIndex:15,
+                background:'rgba(12,10,18,0.7)',backdropFilter:'blur(8px)',border:'1px solid var(--border)',
+                color:'var(--fg2)',fontFamily:'var(--font-mono)',fontSize:'12px',padding:'8px 14px',borderRadius:'999px'}}>
+              tap for level-up demo
+            </button>
+          )}
+        </div>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('app')).render(<App />);
+  </script>
+  <script src="../../assets/reading-mode.js"></script>
+</body>
+</html>

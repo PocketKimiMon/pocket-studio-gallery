@@ -1,0 +1,15 @@
+{
+  "name": "pocket-studio-booking",
+  "version": "1.0.0",
+  "description": "A single-file, mobile-first site for MyKey Pocket / Pocket Studio.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "playwright": "^1.61.1"
+  }
+}

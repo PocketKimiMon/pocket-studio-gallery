@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mykey Pocket — Haircuts, color &amp; quiet chair-side care</title>
+<meta name="description" content="Hair artist, barber & systems nerd. Haircuts, color, and neurodivergent-friendly cuts in Seattle or at your door.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/nineties.css">
+<style>
+  :root{
+    --lime:#8ACE00; --void:#120E17; --flush:#FF5A5F; --violet:#9B5CFF;
+    --bone:#F3ECDE; --ash:#8B8693; --ink:#120E17;
+    --bg:var(--bone); --surface:#FFFFFF; --surface-2:#EDE6D8;
+    --fg1:#1A1422; --fg2:#4A4152; --fg3:#8B8693;
+    --border:var(--void); --border-subtle:rgba(18,14,23,0.18);
+    --font-display:'Bricolage Grotesque','Archivo',sans-serif;
+    --font-sans:'Inter',system-ui,-apple-system,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,monospace;
+    --font-hand:'Caveat',cursive;
+    --radius:16px; --pill:999px;
+    --shadow:6px 6px 0 var(--void);
+    --shadow-lime:6px 6px 0 var(--lime);
+    --shadow-violet:8px 8px 0 var(--violet);
+    --ease:cubic-bezier(.34,1.56,.64,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--fg1);font-family:var(--font-sans);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+  a{color:inherit}
+  h1,h2,h3{font-family:var(--font-display);font-weight:800;line-height:1.02;letter-spacing:-0.02em}
+  .eyebrow{font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--flush);display:inline-block;margin-bottom:10px}
+  .hand{font-family:var(--font-hand);font-size:27px;color:var(--flush);transform:rotate(-2deg);line-height:1.15}
+
+  /* nav */
+  .nav{position:sticky;top:0;z-index:50;background:rgba(243,236,222,.9);backdrop-filter:blur(12px);border-bottom:2px solid var(--void)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;max-width:1080px;margin:0 auto}
+  .logo{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:800;font-size:20px;text-decoration:none}
+  .logo svg{width:36px;height:36px}
+  .logo em{color:var(--lime);background:var(--void);padding:0 .08em;border-radius:6px}
+  .nav-links{display:flex;align-items:center;gap:18px}
+  .nav-links a{font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--fg2);text-decoration:none}
+  .nav-links a:hover{color:var(--ink)}
+  .btn{display:inline-block;font-family:var(--font-mono);font-size:13px;text-transform:uppercase;letter-spacing:.06em;text-decoration:none;padding:11px 18px;border:2px solid var(--void);border-radius:var(--pill);background:var(--surface);color:var(--ink);box-shadow:3px 3px 0 var(--void);transition:transform .15s var(--ease),box-shadow .15s var(--ease)}
+  .btn:hover{transform:translateY(-2px);box-shadow:5px 5px 0 var(--void)}
+  .btn-primary{background:var(--flush);color:var(--bone);border:2px solid var(--void);box-shadow:4px 4px 0 var(--void)}
+  .btn-primary:hover{background:var(--void);box-shadow:4px 4px 0 var(--flush)}
+  .btn-secondary{background:var(--lime);color:var(--void)}
+
+  /* hero */
+  .hero{padding:54px 0 30px;position:relative}
+  .hero-bloom{position:absolute;top:-100px;right:-40px;width:420px;height:420px;background:radial-gradient(circle,rgba(155,92,255,.18),transparent 62%);filter:blur(20px);pointer-events:none}
+  .hero h1{font-size:clamp(40px,8vw,86px);text-transform:lowercase}
+  .hero h1 span{background:var(--void);color:var(--lime);padding:0 .08em;border-radius:8px}
+  .hero p.lead{font-size:clamp(17px,2.4vw,21px);max-width:620px;margin:22px 0;color:var(--fg2)}
+  .hero .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+
+  /* section scaffolding */
+  section.block{padding:54px 0;border-top:2px solid var(--void)}
+  .sec-head{margin-bottom:30px}
+  .sec-head h2{font-size:clamp(28px,5vw,46px);text-transform:lowercase}
+  .sec-head p{max-width:560px;margin-top:10px;color:var(--fg2)}
+
+  /* service grid */
+  .sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+  .scard{background:var(--surface);border:2px solid var(--void);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);transition:transform .18s var(--ease),box-shadow .18s var(--ease)}
+  .scard:hover{transform:translateY(-4px)}
+  .scard h3{font-size:1.4rem;text-transform:lowercase}
+  .scard .meta{font-family:var(--font-mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--violet);margin:6px 0 12px}
+  .scard p{font-size:15px;color:var(--fg2)}
+  .scard .price{display:inline-block;margin-top:14px;font-family:var(--font-mono);font-weight:600;font-size:18px;color:var(--violet)}
+  .scard.au{border-color:var(--violet);box-shadow:6px 6px 0 var(--violet)}
+  .tag{display:inline-block;margin-left:8px;font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--violet);border:1.5px solid var(--violet);border-radius:var(--pill);padding:2px 8px;vertical-align:middle}
+
+  /* service detail */
+  .sdetail{border:2px solid var(--void);border-radius:var(--radius);background:var(--surface);padding:26px;margin-bottom:16px;box-shadow:var(--shadow)}
+  .sdetail h3{font-size:1.6rem;text-transform:lowercase}
+  .sdetail .meta{font-family:var(--font-mono);font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--violet);margin:6px 0 14px}
+  .sdetail p{color:var(--fg2);max-width:64ch}
+  .sdetail ul{list-style:none;margin:14px 0}
+  .sdetail li{padding-left:20px;position:relative;margin-bottom:8px;color:var(--fg1);font-size:15px}
+  .sdetail li::before{content:'+';position:absolute;left:0;color:var(--lime);font-family:var(--font-mono);font-weight:700}
+  .sdetail .btn{margin-top:6px}
+
+  /* about */
+  .about{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+  .portrait{border:3px solid var(--void);border-radius:var(--radius);box-shadow:var(--shadow-violet);background:repeating-linear-gradient(45deg,#EDE6D8,#EDE6D8 14px,#E4DCCB 14px,#E4DCCB 28px);min-height:340px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--fg3);font-family:var(--font-mono);font-size:13px;padding:20px}
+  .about p{margin-bottom:14px;color:var(--fg2);max-width:52ch}
+  .about p.quote{font-family:var(--font-display);font-weight:500;font-size:19px;color:var(--ink)}
+  .diffgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+  .dcard{border:2px solid var(--void);border-radius:var(--radius);background:var(--surface);padding:20px;box-shadow:var(--shadow)}
+  .dcard h3{font-size:1.15rem;text-transform:lowercase}
+  .dcard p{margin-top:8px;font-size:14.5px;color:var(--fg2)}
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+  .stepcard{border:2px solid var(--void);border-radius:var(--radius);background:var(--surface);padding:20px;box-shadow:var(--shadow)}
+  .stepcard .meta{font-family:var(--font-mono);font-size:12px;text-transform:uppercase;color:var(--flush);letter-spacing:.06em;margin-bottom:8px}
+  .stepcard h3{font-size:1.1rem;text-transform:lowercase}
+
+  /* testimonials */
+  .tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+  .tcard{border:2px solid var(--void);border-left:5px solid var(--flush);border-radius:var(--radius);background:var(--surface);padding:22px;box-shadow:var(--shadow)}
+  .tcard p{font-size:16px;line-height:1.5;color:var(--ink)}
+  .tcard .author{font-family:var(--font-display);font-weight:700;margin-top:14px}
+  .tcard .meta{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--fg3);margin-top:2px}
+
+  /* brand voice */
+  .voice{background:var(--void);color:var(--bone);border-radius:var(--radius);padding:34px;box-shadow:var(--shadow-lime)}
+  .voice h2{color:var(--bone);text-transform:lowercase}
+  .voice .samples{margin-top:20px;display:flex;flex-direction:column;gap:14px}
+  .voice .line{font-family:var(--font-display);font-weight:500;font-size:clamp(18px,2.4vw,23px);line-height:1.35}
+  .voice .line .g{color:var(--lime)}
+  .voice .line .p{color:var(--violet)}
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  .chip{font-family:var(--font-mono);font-size:13px;padding:8px 14px;border-radius:var(--pill);border:1.5px solid var(--void);background:var(--bone);color:var(--ink)}
+  .chip.a{background:var(--lime);border-color:var(--void)}
+  .chip.b{background:var(--flush);color:var(--bone);border-color:var(--void)}
+  .chip.c{background:var(--violet);color:var(--bone);border-color:var(--void)}
+
+  /* booking embed = existing app */
+  .booking-embed{border:3px solid var(--void);border-radius:var(--radius);box-shadow:var(--shadow-violet);overflow:hidden;background:var(--surface)}
+  .booking-embed iframe{width:100%;border:0;display:block}
+
+  /* cta banner */
+  .cta{background:var(--lime);border:2px solid var(--void);border-radius:var(--radius);padding:34px;box-shadow:var(--shadow);text-align:center}
+  .cta h2{text-transform:lowercase;font-size:clamp(26px,4vw,38px)}
+  .cta p{margin:12px 0 20px;color:var(--ink);max-width:520px;margin-left:auto;margin-right:auto}
+
+  footer{border-top:2px solid var(--void);padding:34px 0 60px;font-family:var(--font-mono);font-size:12px;color:var(--fg3);letter-spacing:.06em;text-transform:uppercase;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+  footer a{color:var(--violet);text-decoration:none}
+
+  .admin-toggle{position:fixed;bottom:20px;right:20px;z-index:60}
+  @media(max-width:820px){.about{grid-template-columns:1fr}.nav-links a:not(.btn){display:none}.portrait{min-height:240px}}
+</style>
+</head>
+<body>
+
+<!-- 90s INTERNET ART LAYER -->
+<canvas id="stars"></canvas>
+<div id="grid-tile"></div>
+<div class="marquee-bar" aria-label="marquee">
+  <div class="scroll" data-text="✦ welcome to mykey pocket — a studio in your pocket ✦ ★ NEW ★ haircuts · color · quiet chair-side care ✦ best viewed in netscape navigator at 800x600 ✦ ★ BOOK NOW ★ chaos with receipts · seattle wa ✦ sign the guestbook below! ✦ ☻ under construction ☻">
+    <span>✦ welcome to mykey pocket — a studio in your pocket ✦ ★ NEW ★ haircuts · color · quiet chair-side care ✦ best viewed in netscape navigator at 800x600 ✦ ★ BOOK NOW ★ chaos with receipts · seattle wa ✦ sign the guestbook below! ✦ ☻ under construction ☻</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-in">
+    <a class="logo" href="#top">
+      <svg viewBox="0 0 100 100" fill="none" aria-hidden="true">
+        <path d="M14 40 C14 34 18 30 24 30 L76 30 C82 30 86 34 86 40 L86 74 C86 80 82 84 76 84 L24 84 C18 84 14 80 14 74 Z" fill="#120E17"/>
+        <path d="M14 40 C14 34 18 30 24 30 L50 30 L50 52 L14 52 Z" fill="#8ACE00"/>
+        <circle cx="50" cy="50" r="9" fill="none" stroke="#F3ECDE" stroke-width="4"/>
+        <path d="M50 59 L50 72 M50 66 L57 66" stroke="#F3ECDE" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+      my<em>key</em> pocket
+    </a>
+    <div class="nav-links">
+      <a href="#services">Services</a>
+      <a href="#about">About</a>
+      <a href="#why">Why me</a>
+      <a href="#stories">Stories</a>
+      <a href="#book" class="btn">Book now</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="hero-bloom"></div>
+  <div class="wrap">
+    <span class="eyebrow">Independent stylist · Rudy's Barbershop, Fremont</span>
+    <h1>hair that fits your life, <span>one appointment at a time.</span></h1>
+    <p class="lead">Haircuts, color, and quiet chair-side care for neurodivergent folks, first-timers, and anyone who wants to feel like themselves. In-shop in Seattle or I travel within 30 miles.</p>
+    <div class="actions">
+      <a href="#book" class="btn btn-primary">Book your appointment</a>
+      <a href="#services" class="btn btn-secondary">See services</a>
+    </div>
+    <p class="hand" style="margin-top:18px;">electric, intimate, a little feral — but the chair side always feels safe.</p>
+  </div>
+</header>
+
+<!-- SERVICES (summary) -->
+<section class="block" id="services">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Services</span>
+      <h2>what i offer</h2>
+      <p>From quick cuts to full color sessions, every service is built around your comfort and your hair.</p>
+    </div>
+    <div class="sgrid">
+      <div class="scard"><h3>Buzz Cut</h3><div class="meta">15 min+ · $28</div><p>Clipper cut, two guards max, clean finish. Shampoo, hot towel, and quick style included.</p><span class="price">$28</span></div>
+      <div class="scard"><h3>Short Cut</h3><div class="meta">20 min+ · $45</div><p>Shears, razor, clippers, and trimmers for anything above the jawline. Most fades live here.</p><span class="price">$45</span></div>
+      <div class="scard"><h3>Bald Fade</h3><div class="meta">30 min+ · $45</div><p>Close-to-skin fade with shears and clippers. The sharp, low-maintenance classic.</p><span class="price">$45</span></div>
+      <div class="scard"><h3>Long Haircut</h3><div class="meta">30 min+ · $58</div><p>Layers, fringe, texturizing, and a rough blow-dry to 80% so you leave looking polished.</p><span class="price">$58</span></div>
+      <div class="scard"><h3>New Color Client</h3><div class="meta">Consultation · Free</div><p>Free consultation. We talk goals, assess hair health, and plan the right color before booking.</p><span class="price">Free</span></div>
+      <div class="scard"><h3>Established Color Client</h3><div class="meta">90 min+ · $120</div><p>Maintenance, refresh, or retouch. Includes consultation, color, gloss, and style finish.</p><span class="price">$120</span></div>
+      <div class="scard au"><h3>AuDHD First-Time Haircut<span class="tag">comfort</span></h3><div class="meta">45 min+ · $55</div><p>Built for autistic and ADHD clients who need extra time, clear communication, and a low-pressure environment.</p><span class="price">$55</span></div>
+      <div class="scard au"><h3>Let's Find True Self<span class="tag">comfort</span></h3><div class="meta">60 min+ · $75</div><p>A collaborative identity + haircut session. We talk through how you want to show up, then shape it.</p><span class="price">$75</span></div>
+      <div class="scard au"><h3>Silent Cut<span class="tag">comfort</span></h3><div class="meta">30 min+ · $45</div><p>A low-social appointment for people who prefer quiet. Same focused cut, zero pressure to chat.</p><span class="price">$45</span></div>
+      <div class="scard"><h3>Rudy's Rescue</h3><div class="meta">Varies · Free</div><p>Free fix for Rudy's no-shows and walk-ins who need a clean-up. Because good chairs shouldn't sit empty.</p><span class="price">Free</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICE DETAILS -->
+<section class="block">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Details</span>
+      <h2>everything i offer, up close</h2>
+      <p>Haircuts and color services, plus a few chair experiences built around comfort, identity, and calm.</p>
+    </div>
+
+    <div class="sdetail">
+      <h3>Buzz Cut</h3><div class="meta">15 min+ · $28</div>
+      <p>A clean, no-fuss clipper cut. Best for anyone who wants a sharp, low-maintenance look. I use no more than two guards and keep it no longer than 1/4 inch, so this is not the option for fades or longer textured styles.</p>
+      <ul><li>Clipper cut with two guards max</li><li>Shampoo, scalp massage, and conditioning</li><li>Hot towel and quick style</li></ul>
+      <a href="#book" class="btn btn-primary">Book Buzz Cut</a>
+    </div>
+
+    <div class="sdetail">
+      <h3>Short Cut</h3><div class="meta">20 min+ · $45</div>
+      <p>Short hair above the jawline, cut with a mix of shears, razor, clippers, and trimmers. This covers most fades, textured crops, and classic short men's/women's cuts. If you want a fade or anything that lives close to the skin, this is your service.</p>
+      <ul><li>Shears, razor, clippers, trimmers</li><li>Most fades and textured short cuts</li><li>Shampoo, scalp massage, condition, hot towel, flash style</li></ul>
+      <a href="#book" class="btn btn-primary">Book Short Cut</a>
+    </div>
+
+    <div class="sdetail">
+      <h3>Bald Fade</h3><div class="meta">30 min+ · $45</div>
+      <p>Close-to-skin fade built with clippers and trimmers, finished with shears on top. Sharp, clean, and made to last between visits.</p>
+      <ul><li>Skin-to-long gradient</li><li>Shears + clippers finish on top</li><li>Hot towel and edge-up</li></ul>
+      <a href="#book" class="btn btn-primary">Book Bald Fade</a>
+    </div>
+
+    <div class="sdetail">
+      <h3>Long Haircut</h3><div class="meta">30 min+ · $58</div>
+      <p>Long hair with shape, layers, fringe, or texturizing. I rough blow-dry to about 80% so you leave looking polished, not wet and wondering what it will do when it dries.</p>
+      <ul><li>Layers, fringe, face-framing, or texturizing</li><li>Shampoo, scalp massage, condition</li><li>Rough blow-dry to 80%, flash style</li></ul>
+      <a href="#book" class="btn btn-primary">Book Long Haircut</a>
+    </div>
+
+    <div class="sdetail">
+      <h3>New Color Client</h3><div class="meta">Consultation · Free</div>
+      <p>This is where color starts. We sit down, talk about what you want, look at your hair history and current condition, and make a plan. If you've never colored your hair or never worked with me, book this first.</p>
+      <ul><li>Free, no-pressure consultation</li><li>Hair health assessment and realistic timeline</li><li>Price quote for the actual color service before you book it</li></ul>
+      <a href="#book" class="btn btn-primary">Book Color Consultation</a>
+    </div>
+
+    <div class="sdetail">
+      <h3>Established Color Client</h3><div class="meta">90 min+ · $120</div>
+      <p>For returning color clients who have already had a consultation or worked with me before. This covers maintenance, refresh, retouch, tone correction, and gloss application.</p>
+      <ul><li>Maintenance, refresh, or retouch</li><li>Color application and gloss</li><li>Style finish and take-home notes</li></ul>
+      <a href="#book" class="btn btn-primary">Book Color Maintenance</a>
+    </div>
+
+    <div class="sdetail" style="border-color:var(--violet);box-shadow:6px 6px 0 var(--violet)">
+      <h3>AuDHD First-Time Haircut <span class="tag">comfort</span></h3><div class="meta">45 min+ · $55</div>
+      <p>Built for autistic and ADHD clients who need extra time, clear communication, and a low-pressure environment. No surprises, no rushing, and I explain every step before I do it.</p>
+      <ul><li>Extra time built into the appointment</li><li>Sensory-friendly options (quiet, dimmer, breaks)</li><li>Clear communication at your pace</li></ul>
+      <a href="#book" class="btn btn-primary">Book AuDHD First-Time Haircut</a>
+    </div>
+
+    <div class="sdetail" style="border-color:var(--violet);box-shadow:6px 6px 0 var(--violet)">
+      <h3>Let's Find True Self <span class="tag">comfort</span></h3><div class="meta">60 min+ · $75</div>
+      <p>A collaborative haircut + identity session. We talk first — about how you want to show up, what feels right, what doesn't — and then I shape a look that matches. This is my favorite appointment to do.</p>
+      <ul><li>Guided conversation before the cut</li><li>Gender-affirming and identity-exploring friendly</li><li>Collaborative styling and aftercare plan</li></ul>
+      <a href="#book" class="btn btn-primary">Book Let's Find True Self</a>
+    </div>
+
+    <div class="sdetail" style="border-color:var(--violet);box-shadow:6px 6px 0 var(--violet)">
+      <h3>Silent Cut <span class="tag">comfort</span></h3><div class="meta">30 min+ · $45</div>
+      <p>A low-social appointment for people who prefer quiet. Book this if small talk is exhausting or if you just want to zone out while I work. You get the same focused cut, with zero pressure to chat.</p>
+      <ul><li>No required small talk</li><li>Communication only when needed</li><li>Same quality, quieter energy</li></ul>
+      <a href="#book" class="btn btn-primary">Book Silent Cut</a>
+    </div>
+
+    <div class="sdetail">
+      <h3>Rudy's Rescue</h3><div class="meta">Varies · Free</div>
+      <p>Free clean-up cut for Rudy's no-shows and walk-ins who need a fix. Good chairs shouldn't sit empty, and nobody should leave the shop feeling worse than they came.</p>
+      <ul><li>Free, no-questions fix</li><li>Walk-ins welcome when the chair's open</li><li>Same calm, same care</li></ul>
+      <a href="#book" class="btn btn-primary">Book Rudy's Rescue</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="block" id="about">
+  <div class="wrap">
+    <div class="sec-head"><span class="eyebrow">About</span><h2>hi, i'm mykey.</h2></div>
+    <div class="about">
+      <div class="portrait">[ Mykey photo ]<br>replace with your portrait</div>
+      <div>
+        <p class="quote">"I started doing hair because I saw too many people leave salons feeling smaller than when they walked in. The small talk, the mirrors, the rushed energy — it doesn't work for everyone. It didn't always work for me."</p>
+        <p>I'm a hair artist, barber, and systems nerd. I build calm spaces where people feel safe enough to look like themselves. The chair should be the safest seat in your week.</p>
+        <p>So I built a practice that puts comfort first. Extra time for people who need it. Clear communication. No pressure to perform. And services like the AuDHD First-Time Haircut and Silent Cut, because I think hairdressing should include the people who usually get left out.</p>
+        <p>I work in Seattle and travel up to 30 miles for house calls. When I'm not behind the chair, I'm building automations and finding ways to make the admin disappear, so the creative work can stay human.</p>
+        <a href="#book" class="btn btn-primary">Book with me</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY ME -->
+<section class="block" id="why">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Why book with me</span>
+      <h2>what makes this different</h2>
+    </div>
+    <div class="diffgrid">
+      <div class="dcard"><h3>Neurodivergent-friendly</h3><p>I offer extra time, sensory adjustments, and clear step-by-step communication for autistic and ADHD clients.</p></div>
+      <div class="dcard"><h3>No-pressure identity work</h3><p>The "Let's Find True Self" session is built for people exploring gender, identity, or just a fresh version of themselves.</p></div>
+      <div class="dcard"><h3>I come to you</h3><p>House calls within 30 miles of Seattle. I bring the tools and the quiet energy; you bring the hair and the honest mood.</p></div>
+      <div class="dcard"><h3>Transparent pricing</h3><p>Prices are listed on every service. Travel fees are calculated from your address before you book. No surprises.</p></div>
+      <div class="dcard"><h3>Systems behind the scenes</h3><p>My booking page is custom. Reminders, client notes, and status tracking are built in, so I can focus on your hair.</p></div>
+      <div class="dcard"><h3>Silent option</h3><p>Prefer quiet? Book the Silent Cut. I'll only talk when necessary. No awkwardness, no pressure.</p></div>
+    </div>
+
+    <div class="sec-head" style="margin-top:48px">
+      <span class="eyebrow">Details</span>
+      <h2>how it works</h2>
+    </div>
+    <div class="steps">
+      <div class="stepcard"><div class="meta">Step 1</div><h3>Pick a service</h3><p>Not sure? Book the free New Color Client consultation or send me a note.</p></div>
+      <div class="stepcard"><div class="meta">Step 2</div><h3>Choose location</h3><p>In-shop in Seattle, or I'll travel to you. Travel fee is calculated from your address.</p></div>
+      <div class="stepcard"><div class="meta">Step 3</div><h3>Show up as you are</h3><p>Come tired, come quiet, come excited. I'll meet you where you are and shape from there.</p></div>
+      <div class="stepcard"><div class="meta">Step 4</div><h3>Leave feeling like you</h3><p>A cut or color that matches who you actually are, plus notes on how to keep it.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- STORIES / TESTIMONIALS -->
+<section class="block" id="stories">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Kind words</span>
+      <h2>what clients say</h2>
+      <p>Real feedback from people who sat in my chair. Send me your story and I'll add it here.</p>
+    </div>
+    <div class="tgrid">
+      <div class="tcard" style="border-left-color:var(--flush)"><p>"I've never felt so comfortable getting a haircut. Mykey explained every step, went slow, and actually listened to what I wanted. For the first time I didn't leave a salon overstimulated and regretting it."</p><div class="author">Jamie R.</div><div class="meta">AuDHD First-Time Haircut · Seattle, WA</div></div>
+      <div class="tcard" style="border-left-color:var(--violet)"><p>"The 'Let's Find True Self' session was the first time a haircut felt like me. We talked about how I wanted to show up, and then Mykey shaped something that finally matched. I cried a little. In a good way."</p><div class="author">Alex M.</div><div class="meta">Let's Find True Self · Seattle, WA</div></div>
+      <div class="tcard" style="border-left-color:var(--lime)"><p>"House calls are a game changer. Mykey showed up on time, set up quietly, and gave me the best fade I've had in years. No waiting room, no awkwardness, just a great cut in my own space."</p><div class="author">Jordan T.</div><div class="meta">Bald Fade · Travel to Bellevue, WA</div></div>
+      <div class="tcard" style="border-left-color:var(--flush)"><p>"As a returning color client, I appreciate that Mykey remembers my hair history and doesn't try to upsell me. The price is clear, the result is beautiful, and the whole thing feels calm."</p><div class="author">Sam K.</div><div class="meta">Established Color Client · Seattle, WA</div></div>
+      <div class="tcard" style="border-left-color:var(--violet)"><p>"I booked the Silent Cut because I hate small talk. It was perfect. Mykey worked quietly, checked in when needed, and I left with exactly the cut I wanted. No pressure, no chatter."</p><div class="author">Riley N.</div><div class="meta">Silent Cut · Seattle, WA</div></div>
+      <div class="tcard" style="border-left-color:var(--lime)"><p>"Mykey was the first person to tell me honestly what my color goal would take. The consultation was free and I never felt pushed. When I came back for the actual color, everything was mapped out."</p><div class="author">Taylor D.</div><div class="meta">New Color Client · Seattle, WA</div></div>
+    </div>
+    <div class="cta" style="margin-top:30px">
+      <h2>have a story to share?</h2>
+      <p>If you've sat in my chair, I'd love to feature your words. Send me a note and I'll add your testimonial to the page.</p>
+      <a href="mailto:MYKEYPOCKET@ICLOUD.COM?subject=My%20testimonial" class="btn btn-primary">Send testimonial</a>
+    </div>
+  </div>
+</section>
+
+<!-- BRAND VOICE -->
+<section class="block">
+  <div class="wrap">
+    <div class="voice">
+      <span class="eyebrow" style="color:var(--lime)">the founder brand</span>
+      <h2>chaos with receipts.</h2>
+      <p style="color:var(--bone);max-width:620px;margin-top:8px;">Beauty-chair intimacy meets a systems brain. One person quietly running a studio in their pocket — building the automations and little digital tools that keep salons full, wrapped in brat-era chaos and made for brains that don't do "normal."</p>
+      <div class="samples">
+        <p class="line">"your calendar isn't full because you're bad at this. it's full of <span class="g">holes nobody's plugging.</span> i plug holes."</p>
+        <p class="line">"a whole studio that fits in your <span class="p">pocket</span> — booking, reminders, rebooking, done while you're mid-blowout."</p>
+        <p class="line">"built by a cosmetologist who got tired of watching good chairs sit empty. <span class="g">weird on purpose. works on purpose.</span>"</p>
+      </div>
+      <div class="chips">
+        <span class="chip a">neurospicy</span><span class="chip">brat-professional</span><span class="chip b">salon-warm</span>
+        <span class="chip c">grimoire-core</span><span class="chip">systems-brained</span><span class="chip a">electric</span>
+        <span class="chip">blunt &amp; kind</span><span class="chip b">a little feral</span><span class="chip c">irreverent</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section class="block" id="book">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Book</span>
+      <h2>ready to feel like yourself?</h2>
+      <p>Pick a service, a time, and where. In-shop in Seattle or travel within 30 miles. Free color consults, and quiet / AuDHD-friendly cuts available.</p>
+    </div>
+    <div class="booking-embed">
+      <iframe src="/booking-frame" title="Booking"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- GUESTBOOK -->
+<section class="block" id="guestbook">
+  <div class="wrap">
+    <div class="guestbook">
+      <h3>✍ sign my guestbook</h3>
+      <form id="gb-form">
+        <input id="gb-name" type="text" maxlength="40" placeholder="your handle / name">
+        <textarea id="gb-msg" maxlength="400" placeholder="leave a note for mykey…"></textarea>
+        <button type="submit">sign it ✦</button>
+      </form>
+      <ul class="gb-list" id="gb-list"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- 90s SIGNAGE: visitor counter, badges, tape, web ring -->
+<section class="block retro-zone" aria-label="90s internet ephemera">
+  <div class="wrap">
+    <div class="visitor">
+      <span class="label">you are visitor number</span>
+      <span class="num" id="visitor-count">000001</span>
+    </div>
+
+    <div class="badge-row">
+      <span class="retro-badge construction">☻ under construction</span>
+      <span class="retro-badge">best viewed in <b>Netscape</b></span>
+      <span class="retro-badge lime">✦ made with notepad</span>
+      <span class="retro-badge violet">✿ neurospicy certified</span>
+      <span class="retro-badge">♥ 100% handwritten html</span>
+      <a class="retro-badge" href="#book">★ book now ★</a>
+    </div>
+
+    <div class="tape-row">
+      <div class="tape">this site is a work of heart ✦ updated whenever the chair is free</div>
+    </div>
+
+    <div class="webring">
+      <span>◀ prev</span> · <a href="#top">mykey pocket home</a> · <span>next ▶</span><br>
+      part of the <b>pocket studio webring</b> · <span class="blink">email me!</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;width:100%">
+    <div>mykey pocket — chaos w/ receipts · seattle, wa</div>
+    <div><a href="mailto:MYKEYPOCKET@ICLOUD.COM">MYKEYPOCKET@ICLOUD.COM</a> · &copy; 2026</div>
+  </div>
+</footer>
+
+<button class="tune-btn" id="tune-btn">▶ play tune</button>
+
+<script src="/nineties.js"></script>
+</body>
+</html>

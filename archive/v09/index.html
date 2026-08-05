@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<!-- @dsCard group="UI Kit — Rainbow Rest Stop" name="Rainbow Rest Stop (podcast)" subtitle="Paper theme — player, episodes, show notes" viewport="900x760" -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rainbow Rest Stop — a podcast for outsiders who build</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+  /* dark, intimate, ember-warm; amber leads */
+  .rr-root { background: var(--bg); color: var(--fg1); min-height: 100vh; position: relative; overflow-x: hidden; }
+  .rr-root::after { content:""; position: fixed; inset: 0; background-image: var(--grain); background-size: 200px 200px; opacity: 0.2; mix-blend-mode: soft-light; pointer-events: none; z-index: 1; }
+  .rr-wrap { position: relative; z-index: 2; max-width: 760px; margin: 0 auto; padding: 0 20px; }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; }
+  .kicker { color: var(--amber); }
+
+  /* buttons */
+  .rr-btn { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 18px;
+    border-radius: var(--radius-pill); font-weight: 700; font-size: 15px; border: 1px solid transparent; white-space: nowrap;
+    transition: transform var(--dur-fast) var(--ease-spring), background var(--dur-base); }
+  .rr-btn:active { transform: scale(.97); }
+  .rr-btn-primary { background: var(--amber); color: var(--on-neon); }
+  .rr-btn-primary:hover { background: var(--amber-bright); }
+
+  /* header */
+  .rr-header { position: sticky; top: 0; z-index: 40; display: flex; align-items: center; justify-content: space-between;
+    max-width: 760px; margin: 0 auto; padding: 12px 20px; background: rgba(11,11,15,0.78); backdrop-filter: blur(12px); }
+  .rr-brand { display: inline-flex; align-items: center; gap: 10px; }
+  .rr-brand-glyph { width: 38px; height: 38px; border-radius: 11px; display: flex; align-items: center; justify-content: center; flex: none;
+    background: var(--amber); color: var(--on-neon); font-size: 20px; box-shadow: 0 4px 14px rgba(240,150,46,0.32); }
+  .rr-brand-wm { font-family: var(--font-serif); font-weight: 700; font-size: 17px; line-height: 0.98; letter-spacing: -0.01em; }
+  .rr-brand-wm span { color: var(--amber); }
+  .rr-header-actions { display: flex; align-items: center; gap: 10px; }
+
+  /* hero player */
+  .rr-hero { padding: 24px 0 8px; }
+  .rr-hero-kick { display: block; margin-bottom: 14px; }
+  .rr-hero-h { font-family: var(--font-serif); font-weight: 700; font-size: var(--text-4xl); line-height: 1.04; letter-spacing: -0.02em; text-wrap: balance; margin-bottom: 8px; }
+  .rr-hero-h em { font-style: italic; color: var(--amber); }
+  .rr-hero-sub { font-size: 17px; color: var(--fg2); max-width: 480px; margin-bottom: 22px; }
+
+  .rr-player { display: flex; flex-direction: column; gap: 16px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-xl); padding: 18px; box-shadow: var(--shadow-md); }
+  .rr-player-art { position: relative; height: 150px; border-radius: var(--radius-lg); overflow: hidden; flex: none;
+    background: radial-gradient(circle at 30% 30%, var(--amber), var(--ink-800)); display: flex; align-items: center; justify-content: center; }
+  .rr-art-rainbow { position: absolute; inset: 0; background: linear-gradient(115deg, #C53B38, #F0962E, #B6F23A, #33CBD2, #8A63D6); opacity: 0.7; mix-blend-mode: overlay; }
+  .rr-art-glyph { position: relative; font-size: 60px; color: #fff; text-shadow: 0 2px 20px rgba(0,0,0,0.3); }
+  .rr-player-body { display: flex; flex-direction: column; }
+  .rr-ep-kicker { font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; color: var(--amber); }
+  .rr-ep-title { font-family: var(--font-serif); font-weight: 700; font-size: var(--text-2xl); letter-spacing: -0.02em; margin: 4px 0 16px; text-wrap: balance; }
+
+  .rr-scrub { padding: 8px 0; cursor: pointer; }
+  .rr-scrub-track { position: relative; height: 6px; border-radius: 999px; background: var(--ink-600); }
+  .rr-scrub-fill { position: absolute; left: 0; top: 0; height: 100%; border-radius: 999px; background: var(--amber); }
+  .rr-scrub-thumb { position: absolute; top: 50%; width: 16px; height: 16px; border-radius: 50%; background: var(--amber);
+    transform: translate(-50%, -50%); box-shadow: 0 2px 6px rgba(240,150,46,0.45); }
+  .rr-times { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 12px; color: var(--fg3); margin-bottom: 14px; }
+  .rr-controls { display: flex; align-items: center; justify-content: center; gap: 22px; }
+  .rr-ctl { position: relative; width: 48px; height: 48px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--surface-2); border: 1px solid var(--border); color: var(--fg1); }
+  .rr-ctl-n { position: absolute; font-family: var(--font-mono); font-size: 8px; font-weight: 700; bottom: 9px; }
+  .rr-play { width: 64px; height: 64px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--amber); color: var(--on-neon); border: none; box-shadow: 0 6px 20px rgba(240,150,46,0.4); }
+
+  /* sections */
+  .rr-section { padding: 36px 0; }
+  .rr-section-head { margin-bottom: 18px; }
+  .rr-h2 { font-family: var(--font-serif); font-weight: 700; font-size: var(--text-3xl); letter-spacing: -0.02em; margin-top: 8px; }
+  .rr-kick { display: block; }
+
+  /* episode list */
+  .rr-eps { display: flex; flex-direction: column; gap: 10px; }
+  .rr-ep { display: flex; gap: 14px; align-items: flex-start; background: var(--surface); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg); padding: 16px; transition: border-color var(--dur-base), transform var(--dur-base) var(--ease-spring); }
+  .rr-ep:hover { transform: translateY(-2px); border-color: var(--amber); }
+  .rr-ep-play { width: 44px; height: 44px; border-radius: 50%; flex: none; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--amber); color: var(--on-neon); border: none; }
+  .rr-ep-main { min-width: 0; }
+  .rr-ep-meta { font-family: var(--font-mono); font-size: 11px; color: var(--fg3); letter-spacing: 0.03em; }
+  .rr-ep-main h3 { font-size: 18px; font-weight: 700; margin: 3px 0; }
+  .rr-ep-main p { font-size: 14px; color: var(--fg2); line-height: 1.5; }
+
+  /* show notes — text-heavy */
+  .rr-tldr { background: color-mix(in oklab, var(--amber) 12%, var(--surface)); border: 1px solid var(--amber); border-radius: var(--radius-lg); padding: 16px 18px; margin-bottom: 22px; }
+  .rr-tldr strong { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; color: var(--amber); display: block; margin-bottom: 6px; }
+  .rr-tldr p { font-size: 16px; color: var(--fg1); line-height: 1.55; }
+  .rr-notes-body h4 { font-size: 16px; font-weight: 700; margin: 20px 0 10px; }
+  .rr-timestamps { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .rr-timestamps li { display: flex; gap: 12px; align-items: baseline; font-size: 15px; color: var(--fg2); line-height: 1.45; }
+  .rr-ts { font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: var(--amber); flex: none; }
+  .rr-quote { font-family: var(--font-serif); font-style: italic; font-size: 20px; line-height: 1.4; color: var(--fg1);
+    border-left: 3px solid var(--amber); padding-left: 16px; margin: 8px 0; text-wrap: balance; }
+  .rr-notes-body p { font-size: 16px; color: var(--fg2); line-height: 1.65; margin-top: 8px; }
+
+  /* subscribe */
+  .rr-subscribe { padding: 40px 0 56px; text-align: center; border-top: 1px solid var(--border); margin-top: 16px; }
+  .rr-sub-h { font-family: var(--font-serif); font-weight: 700; font-size: var(--text-3xl); letter-spacing: -0.02em; margin: 10px 0 20px; }
+  .rr-apps { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .rr-app { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: var(--radius-pill);
+    background: var(--surface); border: 1px solid var(--border); font-weight: 600; font-size: 14px; color: var(--fg1); }
+  .rr-app:hover { border-color: var(--amber); color: var(--amber); }
+  .rr-app svg { color: var(--amber); }
+
+  @media (min-width: 720px) {
+    .rr-player { flex-direction: row; align-items: stretch; }
+    .rr-player-art { width: 180px; height: auto; }
+    .rr-player-body { flex: 1; }
+  }
+</style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="../../assets/reading-mode-toggle.kit.jsx"></script>
+  <script type="text/babel" src="../../assets/icons.jsx"></script>
+  <script type="text/babel" src="Player.jsx"></script>
+  <script type="text/babel" src="RRHeader.jsx"></script>
+  <script type="text/babel" src="Episodes.jsx"></script>
+  <script type="text/babel">
+    const FEATURED = { num: 41, date: 'May 24', title: 'The lean version of your big idea' };
+    function App() {
+      return (
+        <div className="rr-root" id="top">
+          <RRHeader />
+          <div className="rr-wrap">
+            <section className="rr-hero">
+              <span className="kicker rr-hero-kick">// A PODCAST FOR OUTSIDERS WHO BUILD</span>
+              <h1 className="rr-hero-h">Soft landings,<br /><em>real</em> talk.</h1>
+              <p className="rr-hero-sub">A weekly rest stop for neurospicy makers and chaos-to-product founders. Pull over, catch your breath, then go build.</p>
+              <Player ep={FEATURED} />
+            </section>
+            <EpisodeList onPlay={() => {}} />
+            <ShowNotes />
+          </div>
+          <Subscribe />
+        </div>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('app')).render(<App />);
+  </script>
+  <script src="../../assets/reading-mode.js"></script>
+</body>
+</html>

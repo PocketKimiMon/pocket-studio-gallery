@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pocket Studio — book with MyKey</title>
+  <meta name="description" content="Book cuts and color directly with MyKey Pocket, Seattle hair artist. Former Rudy's clients welcome.">
+  <script>document.documentElement.classList.add('js')</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --lime:   #FF6A00;
+      --void:   #120E17;
+      --flush:  #E85D04;
+      --violet: #0FA3A3;
+      --bone:   #F3ECDE;
+      --ash:    #6F6878;
+      --mist:   #5A5460;
+      --card:   #FFFFFF;
+      --card-2: #F7F2E9;
+      --border: rgba(18,14,23,.12);
+      --serif:  'Bricolage Grotesque', sans-serif;
+      --sans:   'Inter', sans-serif;
+      --mono:   'IBM Plex Mono', monospace;
+      --hand:   'Caveat', cursive;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      background:var(--bone);
+      color:var(--void);
+      font-family:var(--sans);
+      line-height:1.65;
+      -webkit-font-smoothing:antialiased;
+    }
+    ::selection{background:var(--lime);color:var(--void)}
+    :focus-visible{outline:3px solid var(--violet);outline-offset:3px}
+
+    a{color:var(--violet);text-decoration:none;transition:opacity .15s ease}
+    a:hover{opacity:.75;text-decoration:underline}
+
+    .wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+    img,svg{max-width:100%;height:auto}
+    p,a,li,button{overflow-wrap:break-word;word-wrap:break-word}
+
+    .topbar{
+      display:flex;justify-content:space-between;align-items:center;
+      font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+      color:var(--ash);padding:16px 0;border-bottom:1px solid var(--border);
+      position:sticky;top:0;z-index:100;
+      background:rgba(243,236,222,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    }
+    .topbar .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--lime);margin-right:8px;box-shadow:0 0 0 0 rgba(138,206,0,.55);animation:pulse 2.2s infinite}
+    @keyframes pulse{0%{opacity:1;box-shadow:0 0 0 0 rgba(138,206,0,.55)}70%{opacity:.7;box-shadow:0 0 0 8px rgba(138,206,0,0)}100%{opacity:1;box-shadow:0 0 0 0 rgba(138,206,0,0)}}
+
+    .hero{padding:64px 0 72px}
+    .hero-inner{max-width:720px}
+    .hero-mark{width:60px;height:60px;margin-bottom:26px;filter:drop-shadow(3px 3px 0 rgba(18,14,23,.18))}
+    .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mist);margin-bottom:14px}
+    .wordmark{
+      font-family:var(--serif);font-weight:750;line-height:.92;letter-spacing:-.03em;
+      font-size:clamp(42px,9vw,96px);color:var(--void);
+      display:flex;flex-wrap:wrap;gap:.1em .12em;align-items:baseline;
+    }
+    .wordmark span{display:inline-block}
+    .wordmark .hi{
+      color:var(--void);
+      background:var(--lime);
+      padding:.02em .08em .04em;
+      border-radius:.08em;
+      box-shadow:3px 3px 0 var(--void);
+    }
+    .tagline{
+      font-family:var(--serif);font-weight:400;font-size:clamp(18px,2.6vw,24px);
+      max-width:560px;margin-top:28px;color:var(--mist);line-height:1.35
+    }
+    .tagline b{font-weight:700;color:var(--void)}
+
+    .promo{
+      margin-top:36px;padding:26px 24px;border:2px solid var(--void);border-radius:16px;
+      background:var(--lime);position:relative;box-shadow:7px 7px 0 var(--void);
+      overflow:hidden;
+    }
+    .promo::before{
+      content:'';position:absolute;inset:auto -20% -40% auto;width:180px;height:180px;border-radius:50%;
+      background:rgba(18,14,23,.06);pointer-events:none;
+    }
+    .promo .hand{position:absolute;top:16px;right:20px;font-size:30px;color:var(--void);transform:rotate(6deg);z-index:1}
+    .promo-kicker{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--void);opacity:.7;margin-bottom:8px}
+    .promo-title{font-family:var(--serif);font-weight:750;font-size:clamp(22px,3.4vw,30px);line-height:1.1;letter-spacing:-.02em;margin-bottom:10px;color:var(--void);padding-right:7ch}
+    .promo p{font-size:15px;color:var(--void);opacity:.88;max-width:46ch;position:relative;z-index:1}
+
+    .notice-band{
+      margin-top:18px;padding:16px 18px;border-radius:12px;
+      background:rgba(15,163,163,.08);border:1.5px solid rgba(15,163,163,.28);
+      border-left:4px solid var(--violet);
+      max-width:720px;font-size:14.5px;color:var(--mist);
+    }
+    .notice-band strong{color:var(--void);font-family:var(--serif);font-weight:700}
+
+    .house-call{
+      margin-top:14px;padding:18px 20px;border-radius:12px;
+      background:rgba(232,93,4,.07);border:1.5px solid rgba(232,93,4,.28);
+      border-left:4px solid var(--flush);
+      max-width:720px;font-size:14.5px;color:var(--mist);
+    }
+    .house-call strong{color:var(--flush);font-family:var(--serif);font-weight:700}
+
+    section{padding:76px 0;border-top:1px solid var(--border);position:relative}
+    .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:34px;flex-wrap:wrap}
+    @media(max-width:760px){
+      section{padding:56px 0}
+      .sec-head{margin-bottom:28px}
+      .hero{padding:48px 0 56px}
+    }
+    @media(max-width:380px){
+      section{padding:48px 0}
+    }
+    .sec-num{
+      font-family:var(--mono);font-size:11px;color:var(--flush);letter-spacing:.12em;
+      font-weight:600;
+    }
+    .sec-title{font-family:var(--serif);font-weight:750;font-size:clamp(26px,4vw,36px);letter-spacing:-.025em;color:var(--void)}
+    .sec-note{font-family:var(--mono);font-size:10px;color:var(--ash);text-transform:uppercase;letter-spacing:.1em;margin-left:auto;max-width:100%}
+    @media(max-width:560px){
+      .sec-note{margin-left:0;flex-basis:100%}
+      .promo-title{padding-right:0}
+      .promo .hand{position:static;display:block;transform:rotate(3deg);margin-bottom:6px}
+    }
+
+    .about-grid{display:grid;grid-template-columns:1.2fr .85fr;gap:42px;align-items:start}
+    @media(max-width:760px){.about-grid{grid-template-columns:1fr}}
+    .about-text p{font-size:15.5px;color:var(--mist);margin-bottom:16px;max-width:54ch}
+    .about-text p.lede{font-family:var(--serif);font-weight:500;font-size:clamp(19px,2.4vw,22px);color:var(--void);line-height:1.32}
+    .about-card{
+      border-radius:16px;padding:26px 24px;background:var(--void);border:2px solid var(--void);
+      position:relative;overflow:hidden;box-shadow:7px 7px 0 rgba(138,206,0,.55);
+    }
+    .about-card::after{
+      content:'';position:absolute;top:-30px;right:-30px;width:110px;height:110px;border-radius:50%;
+      background:rgba(138,206,0,.12);pointer-events:none;
+    }
+    .about-card h3{font-family:var(--serif);font-weight:750;font-size:20px;margin-bottom:14px;color:var(--bone);position:relative}
+    .about-card ul{list-style:none;display:flex;flex-direction:column;gap:11px;font-size:14px;color:var(--bone);opacity:.9}
+    .about-card li{padding-left:22px;position:relative}
+    .about-card li::before{content:'✦';position:absolute;left:0;color:var(--lime)}
+    .about-card .hand{position:absolute;bottom:14px;right:18px;font-size:26px;color:var(--flush);transform:rotate(-4deg);z-index:1}
+
+    .services{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;align-items:stretch}
+    .service{
+      border-radius:16px;padding:24px 24px 24px 28px;background:var(--card);border:1.5px solid var(--border);
+      cursor:pointer;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
+      display:flex;flex-direction:column;gap:8px;position:relative;min-height:100%;
+    }
+    .service::before{
+      content:'';position:absolute;left:0;top:14px;bottom:14px;width:4px;border-radius:0 4px 4px 0;
+      background:var(--void);opacity:.15;transition:opacity .15s ease;
+    }
+    .service[data-accent="lime"]::before{background:var(--lime);opacity:1}
+    .service[data-accent="flush"]::before{background:var(--flush);opacity:1}
+    .service[data-accent="violet"]::before{background:var(--violet);opacity:1}
+    @media(max-width:480px){
+      .service{padding:20px 20px 20px 24px}
+    }
+    .service:hover{transform:translateY(-4px);border-color:var(--void);box-shadow:6px 6px 0 var(--void)}
+    .service:hover::before{top:10px;bottom:10px}
+    .service .name{font-family:var(--serif);font-weight:750;font-size:20px;letter-spacing:-.015em;color:var(--void)}
+    .service .time{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--ash)}
+    .service .desc{font-size:14px;color:var(--mist);line-height:1.5}
+    .service .tag{
+      align-self:flex-start;font-family:var(--mono);font-size:10px;letter-spacing:.06em;
+      text-transform:uppercase;padding:5px 12px;border-radius:100px;border:1.5px solid var(--void);margin-top:auto;color:var(--void)
+    }
+    .service.selected{outline:3px solid var(--violet);outline-offset:3px;background:rgba(15,163,163,.06)}
+    .service[data-accent="lime"] .tag{background:var(--lime)}
+    .service[data-accent="flush"] .tag{background:var(--flush);color:var(--bone)}
+    .service[data-accent="violet"] .tag{background:var(--violet);color:var(--bone)}
+
+    .policies{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;align-items:stretch}
+    .policy{
+      border-radius:16px;padding:22px;background:var(--card);border:1.5px solid var(--border);
+      display:flex;flex-direction:column;gap:8px;min-height:100%;
+      transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease;
+    }
+    .policy:hover{transform:translateY(-2px);border-color:var(--void);box-shadow:4px 4px 0 var(--void)}
+    .policy .num{font-family:var(--mono);font-size:11px;color:var(--flush);letter-spacing:.1em;font-weight:600}
+    .policy h4{font-family:var(--serif);font-weight:750;font-size:17px;color:var(--void);letter-spacing:-.01em}
+    .policy p{font-size:13.5px;color:var(--mist);line-height:1.5}
+
+    .blog{list-style:none;display:flex;flex-direction:column;gap:18px}
+    .post{
+      border-radius:16px;padding:26px 24px;background:var(--card);border:1.5px solid var(--border);
+      position:relative;box-shadow:4px 4px 0 rgba(18,14,23,.06);
+    }
+    .post-date{font-family:var(--mono);font-size:10px;color:var(--ash);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+    .post h3{font-family:var(--serif);font-weight:750;font-size:20px;margin-bottom:10px;letter-spacing:-.015em;color:var(--void)}
+    .post p{font-size:14.5px;color:var(--mist);line-height:1.6;margin-bottom:10px}
+    .post p:last-child{margin-bottom:0}
+    .post .hand{font-size:22px;color:var(--flush);display:inline-block;margin-top:6px}
+
+    .cal-frame{
+      border-radius:16px;overflow:hidden;
+      background:#fff;border:1px solid var(--border);min-height:700px;position:relative;box-shadow:6px 6px 0 var(--void);
+    }
+    .cal-frame > div{min-height:700px}
+    .cal-skeleton{
+      position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;color:var(--ash);
+      font-family:var(--mono);font-size:12px;letter-spacing:.05em;pointer-events:none;z-index:0;transition:opacity .5s ease;
+    }
+    .cal-skeleton span{display:inline-block;width:32px;height:32px;border:2px solid var(--border);border-top-color:var(--lime);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .fine{font-family:var(--mono);font-size:10px;color:var(--ash);text-transform:uppercase;letter-spacing:.06em;margin-top:14px}
+    .fine.readable{font-size:12px;text-transform:none;letter-spacing:.02em;line-height:1.55;margin-top:10px;color:var(--mist)}
+
+    footer{border-top:1px solid var(--border);padding:52px 0 88px}
+    .footer-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+    @media(max-width:640px){.footer-grid{grid-template-columns:1fr}}
+    .footer-col h4{font-family:var(--serif);font-weight:750;font-size:17px;margin-bottom:12px;color:var(--void)}
+    .footer-col p,.footer-col a{font-size:14px;color:var(--mist);line-height:1.7}
+    .footer-col a{display:block}
+    .footer-col a:hover{color:var(--violet)}
+    .hand{font-family:var(--hand);font-size:24px;color:var(--flush);transform:rotate(-2deg);display:inline-block;margin-top:8px}
+    .legal{font-family:var(--mono);font-size:10px;color:var(--ash);text-transform:uppercase;letter-spacing:.06em;margin-top:28px}
+    .legal a{color:var(--ash)}
+    .legal a:hover{color:var(--violet)}
+
+    /* —— fun layer —— */
+    @keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-6px) rotate(var(--r,0deg))}}
+    @keyframes wiggle{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+    @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.08)}100%{transform:scale(1)}}
+    @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    @keyframes sparkle{0%,100%{opacity:.35;transform:scale(.9)}50%{opacity:1;transform:scale(1.15)}}
+    @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+    .fun-strip{
+      overflow:hidden;border:2px solid var(--void);border-radius:100px;
+      margin:18px 0 0;height:36px;position:relative;
+      box-shadow:4px 4px 0 var(--lime);
+      background-color:var(--void);
+      background-image:url('assets/bg/strip.svg');
+      background-size:auto 100%;
+      background-repeat:repeat-x;
+      animation:stripSlide 28s linear infinite;
+    }
+    @keyframes stripSlide{from{background-position:0 0}to{background-position:-960px 0}}
+    .fun-strip-track{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+    .stickers{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+    .sticker{
+      display:inline-flex;align-items:center;gap:6px;
+      font-family:var(--hand);font-size:18px;font-weight:600;line-height:1;
+      padding:8px 14px;border:2px solid var(--void);border-radius:100px;
+      background:var(--card);box-shadow:3px 3px 0 var(--void);
+      transform:rotate(var(--r, -3deg));
+      transition:transform .15s ease,box-shadow .15s ease;
+      user-select:none;
+    }
+    .sticker:hover{transform:rotate(0deg) scale(1.06);box-shadow:4px 4px 0 var(--void)}
+    .sticker.lime{background:var(--lime)}
+    .sticker.flush{background:var(--flush);color:var(--bone);border-color:var(--void)}
+    .sticker.violet{background:var(--violet);color:var(--bone)}
+    .sticker.bone{background:var(--bone)}
+
+    .hero-mark{animation:bob 3.5s ease-in-out infinite;cursor:default}
+    .hero-mark:hover{animation:wiggle .4s ease}
+    .wordmark span{transition:transform .18s ease}
+    .wordmark:hover span:nth-child(1){transform:rotate(-4deg) translateY(-2px)}
+    .wordmark:hover span:nth-child(2){transform:rotate(2deg) scale(1.04)}
+    .wordmark:hover span:nth-child(3){transform:rotate(-2deg) translateY(2px)}
+    .wordmark .hi{transition:transform .18s ease,box-shadow .18s ease}
+    .wordmark:hover .hi{box-shadow:5px 5px 0 var(--void)}
+
+    .promo{transform:rotate(-.4deg)}
+    .promo:hover{transform:rotate(0deg)}
+    .promo .hand{animation:wiggle 2.8s ease-in-out infinite;transform-origin:center}
+
+    .service{border-radius:18px}
+    .service .ico{
+      width:40px;height:40px;margin-bottom:4px;
+      filter:drop-shadow(2px 2px 0 rgba(18,14,23,.12));
+      transition:transform .2s ease;
+    }
+    .service:hover .ico{transform:scale(1.12) rotate(-8deg)}
+    .sticker .ico{
+      width:18px;height:18px;flex-shrink:0;
+    }
+    .inline-ico{width:1em;height:1em;vertical-align:-.12em;display:inline-block}
+    .kicker .inline-ico{width:12px;height:12px;margin-left:4px;vertical-align:-1px}
+    .hand-ico{width:28px;height:28px;display:inline-block;vertical-align:middle;margin-left:4px}
+    .fab-ico{width:16px;height:16px;margin-right:8px;vertical-align:-2px;display:inline-block}
+    .bp-title .fab-ico{width:14px;height:14px;margin-right:7px;vertical-align:-1px}
+    /* stamp tilt applied after scene reveal (see .scene.in .service) */
+    .service:hover{transform:translateY(-5px) rotate(0deg)!important}
+    .policy:hover{transform:translateY(-3px) rotate(0)!important}
+
+    .post{border:2px dashed var(--border)}
+    .scene.in .post{transform:rotate(-.35deg)}
+    .post:hover,.scene.in .post:hover{transform:rotate(0)!important;border-style:solid;border-color:var(--void)}
+
+    .scene.in .about-card{transform:rotate(.6deg)}
+    .about-card:hover,.scene.in .about-card:hover{transform:rotate(0)!important}
+
+    .scene.in .book-cta{transform:rotate(-.3deg)}
+    .book-cta:hover,.scene.in .book-cta:hover{transform:rotate(0)!important}
+    .book-cta-btn:active{transform:scale(.97)}
+
+    #bp-fab{animation:bob 2.6s ease-in-out infinite}
+    #bp-fab:hover{animation:none;transform:translateY(-3px) scale(1.05)}
+    #bp-fab:active{transform:scale(.96)}
+
+    .sec-title{position:relative}
+    .sec-num{display:inline-flex;align-items:center;justify-content:center;
+      min-width:2.2em;padding:3px 8px;border-radius:100px;background:rgba(232,93,4,.12);
+      border:1.5px dashed var(--flush)}
+
+    .spark{
+      position:absolute;font-size:14px;pointer-events:none;
+      animation:sparkle 2.4s ease-in-out infinite;opacity:.7;
+    }
+
+    @media(max-width:560px){
+      .promo{transform:none}
+      .service:nth-child(n){transform:none}
+      .policy:nth-child(n){transform:none}
+      .post,.about-card,.book-cta{transform:none}
+      .fun-strip{border-radius:14px}
+    }
+
+    /* —— scroll as scenes —— */
+    .scroll-progress{
+      position:fixed;top:0;left:0;height:3px;width:0;z-index:200;
+      background:linear-gradient(90deg,var(--lime),var(--violet),var(--flush));
+      box-shadow:0 0 12px rgba(138,206,0,.45);
+      pointer-events:none;
+    }
+    .scene-nav{
+      position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:90;
+      display:flex;flex-direction:column;gap:10px;align-items:center;
+    }
+    .scene-nav a{
+      width:10px;height:10px;border-radius:50%;
+      border:2px solid var(--void);background:transparent;
+      box-shadow:2px 2px 0 rgba(18,14,23,.15);
+      transition:transform .2s ease,background .2s ease,box-shadow .2s ease;
+      text-decoration:none;opacity:.55;
+    }
+    .scene-nav a:hover{opacity:1;transform:scale(1.25);text-decoration:none}
+    .scene-nav a.on{
+      background:var(--lime);opacity:1;transform:scale(1.35);
+      box-shadow:2px 2px 0 var(--void);
+    }
+    .scene-nav a .tip{
+      position:absolute;right:22px;top:50%;transform:translateY(-50%);
+      font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+      color:var(--void);background:var(--bone);border:1.5px solid var(--void);
+      padding:4px 8px;border-radius:100px;white-space:nowrap;
+      opacity:0;pointer-events:none;transition:opacity .15s ease;
+      box-shadow:2px 2px 0 var(--void);
+    }
+    .scene-nav a{position:relative}
+    .scene-nav a:hover .tip{opacity:1}
+
+    /* hidden only when JS is active — progressive enhancement */
+    html.js .scene:not(.in){
+      opacity:0;transform:translateY(36px) scale(.985);
+    }
+    .scene{
+      transition:opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1);
+      will-change:opacity,transform;
+    }
+    .scene.in{opacity:1;transform:none}
+    html.js .scene:not(.in) .sec-head,
+    html.js .scene:not(.in) .about-grid,
+    html.js .scene:not(.in) .blog,
+    html.js .scene:not(.in) .services,
+    html.js .scene:not(.in) .policies,
+    html.js .scene:not(.in) .book-cta,
+    html.js .scene:not(.in) .footer-grid,
+    html.js .scene:not(.in) .legal{
+      opacity:0;transform:translateY(22px);
+    }
+    .scene .sec-head,
+    .scene .about-grid,
+    .scene .blog,
+    .scene .services,
+    .scene .policies,
+    .scene .book-cta,
+    .scene .footer-grid,
+    .scene .legal{
+      transition:opacity .55s cubic-bezier(.2,.8,.2,1), transform .55s cubic-bezier(.2,.8,.2,1);
+    }
+    .scene.in .sec-head{opacity:1;transform:none;transition-delay:.05s}
+    .scene.in .about-grid,
+    .scene.in .blog,
+    .scene.in .services,
+    .scene.in .policies,
+    .scene.in .book-cta,
+    .scene.in .footer-grid{opacity:1;transform:none;transition-delay:.16s}
+    .scene.in .legal{opacity:1;transform:none;transition-delay:.28s}
+
+    html.js .scene:not(.in) .service,
+    html.js .scene:not(.in) .policy{
+      opacity:0;transform:translateY(28px);
+    }
+    .scene .service,
+    .scene .policy{
+      transition:opacity .5s cubic-bezier(.2,.8,.2,1), transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .18s ease, border-color .18s ease;
+    }
+    .scene.in .service,
+    .scene.in .policy{opacity:1}
+    .scene.in .service:nth-child(1),.scene.in .policy:nth-child(1){transform:none;transition-delay:.18s}
+    .scene.in .service:nth-child(2),.scene.in .policy:nth-child(2){transform:rotate(.4deg);transition-delay:.26s}
+    .scene.in .service:nth-child(3),.scene.in .policy:nth-child(3){transform:rotate(-.35deg);transition-delay:.34s}
+    .scene.in .service:nth-child(4),.scene.in .policy:nth-child(4){transform:rotate(.3deg);transition-delay:.42s}
+    .scene.in .service:nth-child(5),.scene.in .policy:nth-child(5){transform:rotate(-.25deg);transition-delay:.5s}
+    .scene.in .policy:nth-child(6){transform:rotate(.25deg);transition-delay:.58s}
+    .scene.in .policy:nth-child(7){transform:rotate(-.2deg);transition-delay:.66s}
+    .scene.in .service:hover,
+    .scene.in .policy:hover{transform:translateY(-5px) rotate(0)!important}
+
+    .hero.scene{opacity:1;transform:none}
+    html.js .hero:not(.in) .reveal-bit,
+    html.js .hero.in .reveal-bit{
+      /* base state for staged reveal when js on */
+    }
+    html.js .hero .reveal-bit{
+      opacity:0;transform:translateY(18px);
+      transition:opacity .6s cubic-bezier(.2,.8,.2,1), transform .6s cubic-bezier(.2,.8,.2,1);
+    }
+    html.js .hero.in .reveal-bit{opacity:1;transform:none}
+    html.js .hero.in .reveal-bit:nth-child(1){transition-delay:.05s}
+    html.js .hero.in .reveal-bit:nth-child(2){transition-delay:.12s}
+    html.js .hero.in .reveal-bit:nth-child(3){transition-delay:.2s}
+    html.js .hero.in .reveal-bit:nth-child(4){transition-delay:.28s}
+    html.js .hero.in .reveal-bit:nth-child(5){transition-delay:.36s}
+    html.js .hero.in .reveal-bit:nth-child(6){transition-delay:.44s}
+    html.js .hero.in .reveal-bit:nth-child(7){transition-delay:.52s}
+    html.js .hero.in .reveal-bit:nth-child(8){transition-delay:.6s}
+
+    section.scene{
+      min-height:auto;
+      scroll-margin-top:72px;
+    }
+    section.scene::before{
+      content:'';position:absolute;left:50%;top:0;width:min(120px,30vw);height:3px;
+      background:linear-gradient(90deg,transparent,var(--lime),var(--violet),transparent);
+      transform:translateX(-50%) scaleX(0);transform-origin:center;
+      transition:transform .7s cubic-bezier(.2,.8,.2,1) .1s;
+      opacity:.7;
+    }
+    section.scene.in::before{transform:translateX(-50%) scaleX(1)}
+
+    .depth-layer{
+      transition:transform .12s linear;
+      will-change:transform;
+    }
+
+    @media(max-width:760px){
+      .scene-nav{right:8px;gap:8px}
+      .scene-nav a{width:8px;height:8px}
+      .scene-nav a .tip{display:none}
+    }
+    @media(max-width:420px){
+      .scene-nav{display:none}
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+      html{scroll-behavior:auto}
+      .fun-strip{animation:none}
+      .service:nth-child(n),.policy:nth-child(n),.post,.about-card,.book-cta,.promo{transform:none}
+      .scene,.scene .sec-head,.scene .about-grid,.scene .blog,.scene .services,.scene .policies,
+      .scene .book-cta,.scene .footer-grid,.scene .legal,.scene .service,.scene .policy,
+      .hero .reveal-bit{opacity:1!important;transform:none!important;transition:none!important}
+      .scroll-progress{display:none}
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+<nav class="scene-nav" id="scene-nav" aria-label="page sections">
+  <a href="#top" data-scene="top" class="on"><span class="tip">top</span></a>
+  <a href="#about" data-scene="about"><span class="tip">about</span></a>
+  <a href="#updates" data-scene="updates"><span class="tip">updates</span></a>
+  <a href="#services" data-scene="services"><span class="tip">services</span></a>
+  <a href="#policies" data-scene="policies"><span class="tip">policies</span></a>
+  <a href="#book" data-scene="book"><span class="tip">book</span></a>
+</nav>
+
+<div class="wrap" id="top">
+
+  <div class="topbar">
+    <div><span class="dot"></span>pocket studio · seattle</div>
+    <div>booking open</div>
+  </div>
+
+  <header class="hero scene" data-scene="top">
+    <div class="hero-inner">
+      <svg class="hero-mark reveal-bit" viewBox="0 0 100 100" fill="none" aria-label="mykey pocket mark">
+        <path d="M14 40 C14 34 18 30 24 30 L76 30 C82 30 86 34 86 40 L86 74 C86 80 82 84 76 84 L24 84 C18 84 14 80 14 74 Z" fill="#120E17"/>
+        <path d="M14 40 C14 34 18 30 24 30 L50 30 L50 52 C50 52 34 52 14 52 Z" fill="#FF6A00"/>
+        <circle cx="50" cy="50" r="9" fill="none" stroke="#F3ECDE" stroke-width="4"/>
+        <path d="M50 59 L50 72 M50 66 L57 66" stroke="#F3ECDE" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+
+      <div class="kicker reveal-bit">your chair moved <img class="inline-ico" src="assets/icons/scissors.svg" alt=""></div>
+      <h1 class="wordmark reveal-bit"><span>my</span><span class="hi">key</span><span> pocket</span></h1>
+
+      <p class="tagline reveal-bit">
+        <b>book cuts + color directly.</b> no front desk, no phone tag, no wondering if the message went through.
+      </p>
+
+      <div class="stickers reveal-bit" aria-hidden="true">
+        <span class="sticker lime" style="--r:-4deg"><img class="ico" src="assets/icons/scissors.svg" alt=""> scissors ready</span>
+        <span class="sticker violet" style="--r:3deg"><img class="ico" src="assets/icons/color-blob.svg" alt=""> color chaos welcome</span>
+        <span class="sticker flush" style="--r:-2deg"><img class="ico" src="assets/icons/house.svg" alt=""> house calls</span>
+        <span class="sticker bone" style="--r:5deg"><img class="ico" src="assets/icons/tea.svg" alt=""> the tea if you rebook</span>
+      </div>
+
+      <div class="fun-strip reveal-bit" aria-hidden="true">
+        <div class="fun-strip-track">icon strip: buzz short long color consult house calls</div>
+      </div>
+
+      <div class="promo reveal-bit">
+        <span class="hand">spill the tea <img class="hand-ico" src="assets/icons/tea.svg" alt=""></span>
+        <div class="promo-kicker">current deal</div>
+        <div class="promo-title">rebook ahead, get the tea.</div>
+        <p>book your next appointment at least 2 days out and i'll spill everything — why i'm not at the old shop anymore, what really went down, all of it. consider it a loyalty bribe.</p>
+      </div>
+
+      <div class="notice-band reveal-bit">
+        <strong>former Rudy's clients:</strong> MyKey is no longer at Rudy's Barbershop. this is the new spot to book. same chair energy, fewer hoops.
+      </div>
+
+      <div class="house-call reveal-bit">
+        <strong>house calls only right now.</strong> i'm coming to you — no travel fee at the moment, but that'll change once i land a new chair. bear with me while i figure out where to set up shop, and thank you for riding this out with me. i know i'm shaking up your routine, and i'm sorry. especially if you're neurodivergent and routine changes are rough — we'll get back to something steady soon.
+      </div>
+    </div>
+  </header>
+
+  <section id="about" class="scene" data-scene="about">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2 class="sec-title">about the artist</h2>
+      <span class="sec-note">the human behind the chair</span>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-text">
+        <p class="lede">i'm MyKey — a Seattle hair artist who just left Rudy's Barbershop and is taking clients directly.</p>
+        <p>i cut and color all textures, but i especially love the transformations: the grow-out rescue, the "i need a change" moment, the color correction that takes six hours and a lot of trust.</p>
+        <p>my chair is a low-judgment zone. come with reference pics, come with bedhead, come with a vague idea and a willingness to talk it through.</p>
+        <p>pronouns: they/them · seattle, wa · <a href="tel:+14259182029">425-918-2029</a> · <a href="mailto:mykeypocket@icloud.com">mykeypocket@icloud.com</a></p>
+      </div>
+      <div class="about-card">
+        <h3>why book direct?</h3>
+        <ul>
+          <li>no front-desk telephone game</li>
+          <li>you know exactly who you're getting</li>
+          <li>rebooking reminders that actually make sense</li>
+          <li>your notes stay with me, not a rotating receptionist</li>
+        </ul>
+        <span class="hand">see you in the chair</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="updates" class="scene" data-scene="updates">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2 class="sec-title">what's going on</h2>
+      <span class="sec-note">updates from the chair</span>
+    </div>
+
+    <ul class="blog" role="list">
+      <li class="post">
+        <div class="post-date">july 14, 2026</div>
+        <h3>house calls + the hunt for a new chair</h3>
+        <p>right now i'm doing house calls only. i'll come to you, set up wherever works, and get you sorted. no travel fee for now — consider it a thank-you for sticking with me while i find a new permanent spot.</p>
+        <p>things are a little chaotic and i know that's hard, especially if you rely on a routine. i feel that deeply. i'm working on getting a chair locked down so we can get back to something steady. appreciate you more than i can say.</p>
+        <span class="hand">— mykey</span>
+      </li>
+    </ul>
+  </section>
+
+  <section id="services" class="scene" data-scene="services">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2 class="sec-title">pick a service</h2>
+      <span class="sec-note">tap one to book</span>
+    </div>
+
+    <ul class="services" role="list">
+      <li class="service" data-service="Buzz Cut" data-book="buzz-cut" data-accent="lime" tabindex="0">
+        <img class="ico" src="assets/icons/buzz.svg" alt="" width="40" height="40">
+        <span class="name">Buzz Cut</span>
+        <span class="time">30 min</span>
+        <span class="desc">clippers all over, clean edges, back to your day.</span>
+        <span class="tag">quick</span>
+      </li>
+      <li class="service" data-service="Short Cut" data-book="short-cut" data-accent="flush" tabindex="0">
+        <img class="ico" src="assets/icons/short.svg" alt="" width="40" height="40">
+        <span class="name">Short Cut</span>
+        <span class="time">45 min</span>
+        <span class="desc">scissor or clipper-over-comb, shaped to your head.</span>
+        <span class="tag">classic</span>
+      </li>
+      <li class="service" data-service="Long Cut" data-book="long-cut" data-accent="violet" tabindex="0">
+        <img class="ico" src="assets/icons/long.svg" alt="" width="40" height="40">
+        <span class="name">Long Cut</span>
+        <span class="time">60 min</span>
+        <span class="desc">layers, texture, cleanup — keep the length, lose the dead ends.</span>
+        <span class="tag">detail</span>
+      </li>
+      <li class="service" data-service="New-Client Color Consult" data-book="hair-consultation" data-accent="flush" tabindex="0">
+        <img class="ico" src="assets/icons/consult.svg" alt="" width="40" height="40">
+        <span class="name">New-Client Color Consult</span>
+        <span class="time">45 min</span>
+        <span class="desc">first time coloring with me? we plan the lift, the tone, and the maintenance before anything touches your head. books 3 days out.</span>
+        <span class="tag">required for new color</span>
+      </li>
+      <li class="service" data-service="Existing-Client Color Appointment" data-book="existing-client-color-appointment" data-accent="lime" tabindex="0">
+        <img class="ico" src="assets/icons/color.svg" alt="" width="40" height="40">
+        <span class="name">Existing-Client Color Appointment</span>
+        <span class="time">3 hr</span>
+        <span class="desc">roots, refresh, full transformation — we already know the vibe. previous color clients: block the afternoon. complex sessions can run 3–5 hr. books 1 week out.</span>
+        <span class="tag">color</span>
+      </li>
+    </ul>
+  </section>
+
+  <section id="policies" class="scene" data-scene="policies">
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2 class="sec-title">the fine print</h2>
+      <span class="sec-note">so nobody gets surprised</span>
+    </div>
+
+    <ul class="policies" role="list">
+      <li class="policy">
+        <span class="num">01</span>
+        <h4>one month at a time</h4>
+        <p>the calendar opens one month at a time, first come first serve. on the 1st of each month, the next full month becomes available.</p>
+      </li>
+      <li class="policy">
+        <span class="num">02</span>
+        <h4>advance notice</h4>
+        <p>haircuts book 2 days out. new-client color consults book 3 days out, and existing-client color appointments book 1 week out — color takes prep. need it sooner? <button type="button" class="linklike" data-emergency>send an emergency request</button>.</p>
+      </li>
+      <li class="policy">
+        <span class="num">03</span>
+        <h4>24-hour cancellation</h4>
+        <p>need to cancel or reschedule? 24 hours notice, unless it's an actual emergency. just talk to me — i'm reasonable, but my time is how i pay rent.</p>
+      </li>
+      <li class="policy">
+        <span class="num">04</span>
+        <h4>no-call-no-show = charged</h4>
+        <p>miss a confirmed appointment without timely notice and you may be charged up to the full quoted/estimated service amount (invoiced if no card on file). fairness goes both ways — full terms on the terms page.</p>
+      </li>
+      <li class="policy">
+        <span class="num">05</span>
+        <h4>2-hour verification</h4>
+        <p>you'll get a text or email 2 hours before your appointment to confirm. if i don't hear back, i may release the slot.</p>
+      </li>
+      <li class="policy">
+        <span class="num">06</span>
+        <h4>pricing &amp; payment</h4>
+        <p>prices are quoted before or at service (they can vary by hair/complexity). payment is due at the appointment unless we agree otherwise.</p>
+      </li>
+      <li class="policy">
+        <span class="num">07</span>
+        <h4>house-call space</h4>
+        <p>provide a safe, ready spot and an accurate address. i may decline or end a visit if the location isn't workable. disclose allergies &amp; prior chemical work.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section id="book" class="scene" data-scene="book">
+    <div class="sec-head">
+      <span class="sec-num">05</span>
+      <h2 class="sec-title">book it</h2>
+      <span class="sec-note" id="hours-note">thu 11am–6pm, fri 12pm–5pm, sat–sun 12pm–8pm</span>
+    </div>
+
+    <style>
+      /* booking CTA */
+      .book-cta{border:2px solid var(--void);border-radius:18px;padding:38px 30px;background:var(--lime);box-shadow:7px 7px 0 var(--void);text-align:center;max-width:100%;position:relative;overflow:hidden}
+      .book-cta::before{content:'';position:absolute;top:-40px;left:-40px;width:140px;height:140px;border-radius:50%;background:rgba(18,14,23,.06);pointer-events:none}
+      .book-cta::after{content:'';position:absolute;bottom:-50px;right:-30px;width:160px;height:160px;border-radius:50%;background:rgba(18,14,23,.05);pointer-events:none}
+      .book-cta-lede{font-family:var(--serif);font-weight:600;font-size:clamp(18px,2.5vw,23px);line-height:1.28;color:var(--void);max-width:44ch;margin:0 auto 26px;position:relative}
+      .book-cta-btn{border:2px solid var(--void);border-radius:100px;padding:16px 40px;background:var(--void);color:var(--lime);font-family:var(--serif);font-weight:800;font-size:19px;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease;max-width:100%;position:relative;letter-spacing:-.01em}
+      .book-cta-btn:hover{transform:translateY(-3px);box-shadow:5px 5px 0 rgba(18,14,23,.25)}
+      .book-cta .fine{margin-top:18px;margin-bottom:0;position:relative}
+      @media(max-width:480px){
+        .book-cta{padding:30px 20px;box-shadow:5px 5px 0 var(--void)}
+        .book-cta-btn{padding:14px 28px;font-size:17px;width:100%}
+      }
+      @media(max-width:360px){
+        .book-cta{padding:24px 16px;box-shadow:4px 4px 0 var(--void)}
+      }
+
+      /* corner booking popup */
+      #bp-fab{position:fixed;right:22px;bottom:22px;z-index:9001;border:2px solid var(--void);border-radius:100px;padding:13px 22px;background:var(--lime);color:var(--void);font-family:var(--serif);font-weight:800;font-size:16px;cursor:pointer;box-shadow:5px 5px 0 var(--void);transition:transform .15s ease,box-shadow .15s ease;max-width:calc(100vw - 28px)}
+      #bp-fab:hover{transform:translateY(-2px);box-shadow:6px 6px 0 var(--void)}
+      #bp-fab .fab-ico{filter:none}
+      .bp-overlay{position:fixed;inset:0;z-index:9000;background:rgba(18,14,23,.5);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:none}
+      .bp-overlay.open{display:block}
+      .bp-panel{position:fixed;right:18px;bottom:18px;z-index:9002;width:min(388px,calc(100vw - 24px));max-height:calc(100vh - 36px);overflow:auto;border:2px solid var(--void);border-radius:18px;background:var(--bone);box-shadow:8px 8px 0 var(--void);display:none;-webkit-overflow-scrolling:touch}
+      .bp-panel.open{display:block;animation:bpIn .18s ease}
+      @keyframes bpIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+      .bp-head{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;background:var(--void);color:var(--bone)}
+      .bp-title{font-family:var(--serif);font-weight:800;font-size:17px;letter-spacing:-.01em}
+      .bp-title .fab-ico{filter:brightness(1.1)}
+      #bp-close{border:none;background:none;color:var(--bone);font-size:24px;line-height:1;cursor:pointer;padding:0 4px;opacity:.8}
+      #bp-close:hover{opacity:1}
+      .bp-body{padding:20px 18px 22px}
+      .bp-q{font-family:var(--serif);font-weight:700;font-size:20px;line-height:1.18;color:var(--void);margin-bottom:5px;letter-spacing:-.015em}
+      .bp-hint{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ash);margin-bottom:16px}
+      .bp-opts{display:grid;gap:11px}
+      .bp-opt{border:2px solid var(--void);border-radius:12px;padding:13px 15px;background:var(--card);font-family:var(--sans);font-size:15px;color:var(--void);cursor:pointer;text-align:left;transition:transform .12s ease,box-shadow .12s ease,background .12s ease}
+      .bp-opt:hover{transform:translateY(-2px);box-shadow:4px 4px 0 var(--void);background:var(--lime)}
+      .bp-opt .o-t{display:block;font-family:var(--serif);font-weight:700;font-size:16px}
+      .bp-opt .o-d{display:block;font-size:12.5px;color:var(--ash);margin-top:3px;line-height:1.4}
+      .bp-row{margin-top:18px}
+      .bp-back{border:none;background:none;font-family:var(--mono);font-size:12px;color:var(--ash);cursor:pointer;text-transform:uppercase;letter-spacing:.06em;padding:4px 0}
+      .bp-back:hover{color:var(--void)}
+      .bp-result{border:2px solid var(--void);border-radius:14px;padding:18px;background:var(--lime);box-shadow:5px 5px 0 var(--void);margin-bottom:16px}
+      .bp-result .r-name{font-family:var(--serif);font-weight:800;font-size:21px;color:var(--void);line-height:1.1}
+      .bp-result .r-meta{font-family:var(--mono);font-size:12px;color:var(--void);opacity:.82;margin-top:6px}
+      .bp-go{display:block;width:100%;border:2px solid var(--void);border-radius:12px;padding:15px;background:var(--void);color:var(--lime);font-family:var(--serif);font-weight:800;font-size:18px;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+      .bp-go:hover{transform:translateY(-2px);box-shadow:5px 5px 0 var(--lime)}
+      .bp-note{font-family:var(--mono);font-size:11px;color:var(--ash);text-align:center;margin-top:13px;line-height:1.55}
+      .bp-note a{color:var(--violet)}
+      @media(max-width:560px){
+        #bp-fab{right:14px;bottom:14px;padding:12px 18px}
+      }
+      @media(max-width:420px){
+        .bp-panel{left:8px;right:8px;bottom:8px;width:auto;max-height:calc(100vh - 16px);border-radius:14px}
+        #bp-fab{font-size:15px;padding:11px 16px}
+      }
+      @media(max-width:340px){
+        #bp-fab .fab-ico{width:14px;height:14px;margin-right:5px}
+        #bp-fab{font-size:14px;padding:10px 14px}
+      }
+    </style>
+
+    <div class="book-cta">
+      <p class="book-cta-lede">answer a couple quick questions and i’ll point you straight to the right appointment — no guesswork, no wrong slot.</p>
+      <button type="button" id="open-quiz" class="book-cta-btn">let’s book it →</button>
+      <br>
+      <button type="button" class="emg-cta" data-emergency>🚨 need it sooner? emergency request</button>
+      <p class="fine readable">availability is live on the calendar — real time, instant confirmation. house calls only right now.</p>
+      <p class="fine readable">by booking you agree to the <a href="terms.html">terms of service</a> and <a href="privacy.html">privacy policy</a>, including the 24-hour cancel rule, no-show charge, SMS/email reminders, and house-call terms. booking runs on cal.com.</p>
+    </div>
+  </section>
+
+  <footer class="scene" data-scene="footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>hit me up</h4>
+        <a href="tel:+14259182029">425-918-2029</a>
+        <a href="mailto:mykeypocket@icloud.com">mykeypocket@icloud.com</a>
+        <a href="https://popl.co/card/l3Nkeo8Y/6/dash" target="_blank" rel="noopener">popl card</a>
+      </div>
+      <div class="footer-col">
+        <h4>the small print</h4>
+        <p>pronouns: they/them<br>location: seattle, wa<br>hours: thu 11am–6pm, fri 12pm–5pm, sat–sun 12pm–8pm</p>
+        <span class="hand">built by one brain, on purpose</span>
+      </div>
+    </div>
+    <p class="legal"><a href="privacy.html">privacy policy</a> · <a href="terms.html">terms of service</a> · © pocket studio / mykey pocket · not affiliated with Rudy's Barbershop</p>
+  </footer>
+
+</div>
+
+<!-- Corner booking popup — qualifies the visitor, then routes to the right Cal.com event -->
+<button type="button" id="bp-fab"><img class="fab-ico" src="assets/icons/scissors.svg" alt="">book</button>
+<div class="bp-overlay" id="bp-overlay"></div>
+<div class="bp-panel" id="bp-panel" role="dialog" aria-modal="true" aria-label="Book an appointment">
+  <div class="bp-head">
+    <span class="bp-title"><img class="fab-ico" src="assets/icons/scissors.svg" alt="">book with mykey</span>
+    <button type="button" id="bp-close" aria-label="Close">&times;</button>
+  </div>
+  <div class="bp-body" id="bp-body"></div>
+</div>
+
+<!-- Emergency request modal — for people who need a slot sooner than the minimum notice -->
+<style>
+  .bp-emg-link{display:block;width:100%;margin-top:10px;border:2px dashed var(--void);border-radius:12px;padding:11px 15px;background:transparent;color:var(--void);font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;text-align:center;transition:transform .12s ease,box-shadow .12s ease,background .12s ease}
+  .bp-emg-link:hover{transform:translateY(-2px);box-shadow:4px 4px 0 var(--void);background:var(--lime);border-style:solid}
+  .emg-cta{display:inline-block;margin-top:14px;border:2px solid var(--void);border-radius:100px;padding:11px 20px;background:var(--bone);color:var(--void);font-family:var(--serif);font-weight:800;font-size:15px;cursor:pointer;box-shadow:4px 4px 0 var(--void);transition:transform .15s ease,box-shadow .15s ease,background .15s ease}
+  .emg-cta:hover{transform:translateY(-2px);box-shadow:5px 5px 0 var(--void);background:var(--lime)}
+  .em-overlay{position:fixed;inset:0;z-index:9100;background:rgba(18,14,23,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:none}
+  .em-overlay.open{display:block}
+  .em-panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:9102;width:min(430px,calc(100vw - 24px));max-height:calc(100vh - 36px);overflow:auto;border:2px solid var(--void);border-radius:18px;background:var(--bone);box-shadow:8px 8px 0 var(--void);display:none;-webkit-overflow-scrolling:touch}
+  .em-panel.open{display:block;animation:bpIn .18s ease}
+  .em-head{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;background:var(--void);color:var(--bone)}
+  .em-title{font-family:var(--serif);font-weight:800;font-size:17px;letter-spacing:-.01em}
+  .em-title .emoji{margin-right:7px}
+  #em-close{border:none;background:none;color:var(--bone);font-size:24px;line-height:1;cursor:pointer;padding:0 2px}
+  #em-close:hover{color:var(--lime)}
+  .em-body{padding:20px 18px 22px}
+  .em-lede{font-family:var(--serif);font-weight:700;font-size:18px;line-height:1.25;color:var(--void);margin-bottom:6px;letter-spacing:-.015em}
+  .em-hint{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ash);margin-bottom:16px}
+  .em-field{margin-bottom:13px}
+  .em-field label{display:block;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--void);margin-bottom:6px}
+  .em-field input,.em-field textarea{width:100%;border:2px solid var(--void);border-radius:12px;padding:11px 13px;background:var(--card);font-family:var(--sans);font-size:15px;color:var(--void);transition:box-shadow .12s ease,transform .12s ease}
+  .em-field input:focus,.em-field textarea:focus{outline:none;box-shadow:4px 4px 0 var(--lime)}
+  .em-field textarea{min-height:74px;resize:vertical}
+  #em-send{display:block;width:100%;border:2px solid var(--void);border-radius:12px;padding:14px;background:var(--lime);color:var(--void);font-family:var(--serif);font-weight:800;font-size:17px;cursor:pointer;box-shadow:5px 5px 0 var(--void);transition:transform .15s ease,box-shadow .15s ease}
+  #em-send:hover{transform:translateY(-2px);box-shadow:6px 6px 0 var(--void)}
+  #em-send:disabled{opacity:.6;cursor:wait;transform:none}
+  .em-status{font-size:14px;line-height:1.5;color:var(--void);margin-top:12px}
+  .em-status a{color:var(--violet)}
+  .em-note{font-family:var(--mono);font-size:11px;color:var(--ash);margin-top:12px;line-height:1.55;text-align:center}
+  .em-note a{color:var(--violet)}
+  .linklike{border:none;background:none;padding:0;font:inherit;color:var(--violet);text-decoration:underline;cursor:pointer}
+  .linklike:hover{color:var(--void)}
+</style>
+<div class="em-overlay" id="em-overlay"></div>
+<div class="em-panel" id="em-panel" role="dialog" aria-modal="true" aria-label="Emergency booking request">
+  <div class="em-head">
+    <span class="em-title"><span class="emoji">🚨</span>emergency request</span>
+    <button type="button" id="em-close" aria-label="Close">&times;</button>
+  </div>
+  <div class="em-body">
+    <p class="em-lede">need it sooner than the calendar allows?</p>
+    <p class="em-hint">tomorrow, this week, whenever — tell me and i’ll try to make it work</p>
+    <form id="em-form">
+      <div class="em-field">
+        <label for="em-name">your name</label>
+        <input id="em-name" name="name" type="text" required autocomplete="name" placeholder="who am i talking to?">
+      </div>
+      <div class="em-field">
+        <label for="em-contact">phone or email</label>
+        <input id="em-contact" name="contact" type="text" required autocomplete="tel" placeholder="best way to reach you, fast">
+      </div>
+      <div class="em-field">
+        <label for="em-what">what do you need?</label>
+        <textarea id="em-what" name="what" required placeholder="cut? color? event hair? the whole situation?"></textarea>
+      </div>
+      <div class="em-field">
+        <label for="em-when">when do you need it?</label>
+        <input id="em-when" name="when" type="text" required placeholder="e.g. tomorrow afternoon, before saturday…">
+      </div>
+      <button type="submit" id="em-send">send emergency request →</button>
+    </form>
+    <p class="em-status" id="em-status" role="status" aria-live="polite"></p>
+    <p class="em-note">goes straight to mykey’s inbox. truly urgent? text <a href="tel:+14259182029">425-918-2029</a>.</p>
+  </div>
+</div>
+
+<script>
+/* scroll as interactive scenes */
+(function(){
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var scenes=Array.prototype.slice.call(document.querySelectorAll('.scene'));
+  var nav=document.getElementById('scene-nav');
+  var navLinks=nav?Array.prototype.slice.call(nav.querySelectorAll('a[data-scene]')):[];
+  var bar=document.getElementById('scroll-progress');
+
+  function setProgress(){
+    if(!bar) return;
+    var h=document.documentElement;
+    var max=h.scrollHeight-window.innerHeight;
+    var p=max>0?window.scrollY/max:0;
+    bar.style.width=(Math.min(1,Math.max(0,p))*100)+'%';
+  }
+
+  function markActive(){
+    if(!navLinks.length) return;
+    var mid=window.scrollY+window.innerHeight*0.38;
+    var current='top';
+    for(var i=0;i<scenes.length;i++){
+      var s=scenes[i];
+      var id=s.getAttribute('data-scene');
+      if(!id||id==='footer') continue;
+      if(s.offsetTop<=mid) current=id;
+    }
+    if(window.scrollY+window.innerHeight>=document.documentElement.scrollHeight-8){
+      var last=scenes[scenes.length-2];
+      if(last&&last.getAttribute('data-scene')) current=last.getAttribute('data-scene');
+    }
+    navLinks.forEach(function(a){
+      a.classList.toggle('on',a.getAttribute('data-scene')===current);
+    });
+  }
+
+  var ticking=false;
+  function onScroll(){
+    if(ticking) return;
+    ticking=true;
+    requestAnimationFrame(function(){
+      setProgress();
+      markActive();
+      ticking=false;
+    });
+  }
+
+  if(reduce){
+    scenes.forEach(function(s){ s.classList.add('in'); });
+    setProgress();
+    markActive();
+  }else{
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting) e.target.classList.add('in');
+      });
+    },{root:null,rootMargin:'0px 0px -12% 0px',threshold:0.12});
+    scenes.forEach(function(s){
+      if(s.classList.contains('hero')) return; /* staged below */
+      io.observe(s);
+    });
+    /* hero: wait one frame so opacity:0 paints, then reveal */
+    var hero=document.querySelector('.hero.scene');
+    if(hero){
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){ hero.classList.add('in'); });
+      });
+    }
+  }
+
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',onScroll,{passive:true});
+  onScroll();
+
+  /* smooth section hops from dots */
+  navLinks.forEach(function(a){
+    a.addEventListener('click',function(e){
+      var href=a.getAttribute('href');
+      if(!href||href.charAt(0)!=='#') return;
+      var target=document.querySelector(href==='#top'?'#top':href);
+      if(!target) return;
+      e.preventDefault();
+      var top=href==='#top'?0:target.getBoundingClientRect().top+window.scrollY-64;
+      window.scrollTo({top:top,behavior:reduce?'auto':'smooth'});
+    });
+  });
+})();
+</script>
+<script>
+(function(){
+  var CAL='https://cal.com/maneautoimation/';
+  var SV={
+    'buzz-cut':{name:'Buzz Cut',dur:'30 min',notice:2,noticeLabel:'2 days'},
+    'short-cut':{name:'Short Cut',dur:'45 min',notice:2,noticeLabel:'2 days'},
+    'long-cut':{name:'Long Cut',dur:'60 min',notice:2,noticeLabel:'2 days'},
+    'hair-consultation':{name:'New-Client Color Consult',dur:'45 min',notice:3,noticeLabel:'3 days'},
+    'existing-client-color-appointment':{name:'Existing-Client Color Appointment',dur:'3 hr',notice:7,noticeLabel:'1 week'}
+  };
+  function earliestDate(days){
+    var d=new Date(); d.setDate(d.getDate()+days);
+    return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+  }
+  var fab=document.getElementById('bp-fab');
+  var overlay=document.getElementById('bp-overlay');
+  var panel=document.getElementById('bp-panel');
+  var body=document.getElementById('bp-body');
+  var closeBtn=document.getElementById('bp-close');
+  var openBtn=document.getElementById('open-quiz');
+
+  function openPanel(){ overlay.classList.add('open'); panel.classList.add('open'); closeBtn.focus(); }
+  function shut(){ overlay.classList.remove('open'); panel.classList.remove('open'); }
+  fab.addEventListener('click',function(){ startQuiz(); openPanel(); });
+  if(openBtn) openBtn.addEventListener('click',function(){ startQuiz(); openPanel(); });
+  overlay.addEventListener('click',shut);
+  closeBtn.addEventListener('click',shut);
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') shut(); });
+
+  function render(html){ body.innerHTML=html; }
+  function bindBack(cb){ var b=body.querySelector('[data-back]'); if(b) b.addEventListener('click',cb); }
+  function opts(cb){ Array.prototype.forEach.call(body.querySelectorAll('.bp-opt'),function(el){ el.addEventListener('click',function(){ cb(el); }); }); }
+
+  function startQuiz(){ askType(); }
+
+  function askType(){
+    render(
+      '<p class="bp-q">what are we doing?</p>'+
+      '<p class="bp-hint">step 1 of 2 · pick one</p>'+
+      '<div class="bp-opts">'+
+        '<button type="button" class="bp-opt" data-go="cut"><span class="o-t">a cut</span><span class="o-d">buzz, short, or long — clippers or scissors</span></button>'+
+        '<button type="button" class="bp-opt" data-go="color"><span class="o-t">color</span><span class="o-d">roots, refresh, or a full transformation</span></button>'+
+      '</div>'+
+      '<div class="bp-row"></div>'
+    );
+    opts(function(el){ if(el.dataset.go==='cut') askCut(); else askClient(); });
+  }
+
+  function askCut(){
+    render(
+      '<p class="bp-q">which cut?</p>'+
+      '<p class="bp-hint">step 2 of 2 · choose your length</p>'+
+      '<div class="bp-opts">'+
+        '<button type="button" class="bp-opt" data-slug="buzz-cut"><span class="o-t">Buzz Cut</span><span class="o-d">clippers all over, clean edges · 30 min</span></button>'+
+        '<button type="button" class="bp-opt" data-slug="short-cut"><span class="o-t">Short Cut</span><span class="o-d">scissor or clipper-over-comb · 45 min</span></button>'+
+        '<button type="button" class="bp-opt" data-slug="long-cut"><span class="o-t">Long Cut</span><span class="o-d">layers, texture, cleanup · 60 min</span></button>'+
+      '</div>'+
+      '<div class="bp-row"><button type="button" class="bp-back" data-back>← back</button></div>'
+    );
+    bindBack(askType);
+    opts(function(el){ showResult(el.dataset.slug); });
+  }
+
+  function askClient(){
+    render(
+      '<p class="bp-q">first time coloring with me?</p>'+
+      '<p class="bp-hint">step 2 of 2 · new color clients start with a consult</p>'+
+      '<div class="bp-opts">'+
+        '<button type="button" class="bp-opt" data-slug="hair-consultation"><span class="o-t">yes, i’m new</span><span class="o-d">we plan the lift, tone & maintenance first · 45 min consult · books 3 days out</span></button>'+
+        '<button type="button" class="bp-opt" data-slug="existing-client-color-appointment"><span class="o-t">no, coming back</span><span class="o-d">we already know the vibe · 3 hr (up to 5 for complex) · books 1 week out</span></button>'+
+      '</div>'+
+      '<div class="bp-row"><button type="button" class="bp-back" data-back>← back</button></div>'
+    );
+    bindBack(askType);
+    opts(function(el){ showResult(el.dataset.slug); });
+  }
+
+  var chosen=new Set();
+  function showResult(slug, add){
+    var s=SV[slug]; if(!s) return;
+    if(add) chosen.add(slug); else chosen=new Set([slug]);
+    render(
+      '<p class="bp-hint">nice — you’re set up for</p>'+
+      '<div class="bp-result"><div class="r-name">'+s.name+'</div><div class="r-meta">'+s.dur+' · house call · seattle</div><div class="r-meta">books '+s.noticeLabel+' out minimum · earliest: '+earliestDate(s.notice)+'</div></div>'+
+      '<button type="button" class="bp-go" id="bp-go">book my appointment →</button>'+
+      '<button type="button" class="bp-emg-link" data-emergency>🚨 need it sooner? emergency request →</button>'+
+      '<p class="bp-note">opens the live calendar to pick a day & time. by booking you accept the <a href="terms.html" target="_blank" rel="noopener">terms</a> & <a href="privacy.html" target="_blank" rel="noopener">privacy policy</a>. text <a href="tel:+14259182029">425-918-2029</a> if nothing fits.</p>'+
+      '<div class="bp-row"><button type="button" class="bp-back" data-back>← start over</button></div>'
+    );
+    bindBack(startQuiz);
+    document.getElementById('bp-go').addEventListener('click',function(){ window.open(CAL+slug,'_blank','noopener'); showWhatElse(); });
+  }
+
+  function showWhatElse(){
+    var others=Object.keys(SV).filter(function(k){ return !chosen.has(k); });
+    if(!others.length){
+      render(
+        '<p class="bp-q">that’s the whole menu</p>'+
+        '<p class="bp-hint">you’ve lined up everything mykey offers</p>'+
+        '<p class="bp-note">want something custom? text <a href="tel:+14259182029">425-918-2029</a> and we’ll figure it out.</p>'+
+        '<div class="bp-row"><button type="button" class="bp-back" data-back>← start over</button></div>'
+      );
+      bindBack(startQuiz);
+      return;
+    }
+    var optsHtml=others.map(function(k){
+      var o=SV[k];
+      return '<button type="button" class="bp-opt" data-slug="'+k+'"><span class="o-t">'+o.name+'</span><span class="o-d">'+o.dur+' · book this next →</span></button>';
+    }).join('');
+    render(
+      '<p class="bp-q">now that you’re sorted…</p>'+
+      '<p class="bp-hint">interested in what else mykey does? add another while you’re here.</p>'+
+      '<div class="bp-opts">'+optsHtml+'</div>'+
+      '<div class="bp-row"><button type="button" class="bp-back" id="bp-done">i’m good, thanks — close</button></div>'
+    );
+    Array.prototype.forEach.call(body.querySelectorAll('.bp-opt'),function(el){ el.addEventListener('click',function(){ showResult(el.dataset.slug,true); }); });
+    var done=document.getElementById('bp-done'); if(done) done.addEventListener('click',shut);
+  }
+
+  // service cards open the popup pre-routed to that service
+  Array.prototype.forEach.call(document.querySelectorAll('.service'),function(card){
+    var go=function(){ var slug=card.dataset.book; if(SV[slug]){ showResult(slug); openPanel(); } };
+    card.addEventListener('click',go);
+    card.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } });
+  });
+
+  /* ---- emergency request modal ---- */
+  var emOverlay=document.getElementById('em-overlay');
+  var emPanel=document.getElementById('em-panel');
+  var emClose=document.getElementById('em-close');
+  var emForm=document.getElementById('em-form');
+  var emStatus=document.getElementById('em-status');
+  function emOpen(){ shut(); emOverlay.classList.add('open'); emPanel.classList.add('open'); var f=emPanel.querySelector('input'); if(f) f.focus(); }
+  function emShut(){ emOverlay.classList.remove('open'); emPanel.classList.remove('open'); }
+  document.addEventListener('click',function(e){ var t=e.target.closest('[data-emergency]'); if(t){ e.preventDefault(); emOpen(); } });
+  emOverlay.addEventListener('click',emShut);
+  emClose.addEventListener('click',emShut);
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') emShut(); });
+  emForm.addEventListener('submit',function(e){
+    e.preventDefault();
+    var btn=document.getElementById('em-send');
+    btn.disabled=true; btn.textContent='sending…';
+    emStatus.textContent='';
+    var payload={
+      _subject:'🚨 EMERGENCY booking request — Pocket Studio',
+      _template:'table',
+      name:document.getElementById('em-name').value,
+      contact:document.getElementById('em-contact').value,
+      what:document.getElementById('em-what').value,
+      when:document.getElementById('em-when').value
+    };
+    fetch('https://formsubmit.co/ajax/itspocketmykey@gmail.com',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify(payload)
+    }).then(function(r){ if(!r.ok) throw new Error('bad status'); return r.json(); })
+    .then(function(){
+      emForm.style.display='none';
+      emStatus.innerHTML='<strong>got it — request sent. 🎉</strong><br>mykey will get back to you fast. if it\'s truly urgent, also text <a href="tel:+14259182029">425-918-2029</a>.';
+    })
+    .catch(function(){
+      btn.disabled=false; btn.textContent='send emergency request →';
+      emStatus.innerHTML='hmm, that didn\'t go through. text <a href="tel:+14259182029">425-918-2029</a> or email <a href="mailto:itspocketmykey@gmail.com">itspocketmykey@gmail.com</a> instead.';
+    });
+  });
+})();
+</script>
+<script src="/mybesti-scroll.js" async></script>
+
+</body>
+</html>

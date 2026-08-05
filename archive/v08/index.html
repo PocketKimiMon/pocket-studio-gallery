@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Rudy's Fremont</title>
+<style>
+  :root { --bg:#f7f5f0; --ink:#1f1f1f; --accent:#c49a3b; --muted:#6b6b6b; --card:#fff; --border:#e2ddd3; --danger:#b71c1c; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.5; }
+  header { background:var(--ink); color:#fff; padding:2rem 1rem 1.25rem; text-align:center; }
+  header h1 { margin:0; font-size:2rem; letter-spacing:1px; }
+  header p { margin:.4rem 0 0; color:var(--accent); font-weight:600; }
+  .container { max-width:980px; margin:0 auto; padding:2rem 1rem 4rem; display:grid; grid-template-columns:1fr 340px; gap:2rem; }
+  @media (max-width:820px) { .container { grid-template-columns:1fr; } }
+  h2 { border-bottom:2px solid var(--accent); padding-bottom:.35rem; margin:0 0 1rem; font-size:1.15rem; text-transform:uppercase; letter-spacing:.5px; }
+  .step { margin-bottom:2rem; }
+  .service-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:.75rem; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1rem 1.1rem; cursor:pointer; transition:box-shadow .15s, border-color .15s; }
+  .card:hover { box-shadow:0 4px 12px rgba(0,0,0,.08); border-color:var(--accent); }
+  .card.selected { border:2px solid var(--accent); background:#fffbf2; }
+  .card-title { font-weight:700; }
+  .card-meta { color:var(--muted); font-size:.9rem; margin-top:.2rem; }
+  .card-price { color:var(--accent); font-weight:700; }
+  .card-desc { font-size:.88rem; color:var(--muted); margin-top:.45rem; }
+  .stylist-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px,1fr)); gap:.7rem; }
+  .stylist { background:var(--card); border:1px solid var(--border); border-radius:6px; padding:.8rem 1rem; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
+  .stylist:hover, .stylist.selected { border-color:var(--accent); background:#fffbf2; }
+  .stylist .name { font-size:.95rem; }
+  .stylist .price { color:var(--accent); font-weight:700; font-size:.95rem; }
+  .sidebar { position:sticky; top:1rem; align-self:start; background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1.25rem; }
+  .summary-row { display:flex; justify-content:space-between; padding:.45rem 0; border-bottom:1px solid var(--border); font-size:.95rem; }
+  .summary-row.total { font-size:1.2rem; font-weight:700; border-bottom:none; padding-top:.8rem; }
+  .summary-label { color:var(--muted); }
+  .empty { color:var(--muted); font-size:.95rem; }
+  input, textarea, button { font-family:inherit; font-size:1rem; }
+  label { display:block; font-size:.9rem; color:var(--muted); margin-bottom:.25rem; }
+  input[type="text"], input[type="email"], input[type="tel"], input[type="date"] { width:100%; padding:.7rem; border:1px solid var(--border); border-radius:6px; margin-bottom:.75rem; }
+  .note { background:#fff8e1; border-left:4px solid var(--accent); padding:.75rem 1rem; border-radius:0 6px 6px 0; font-size:.9rem; color:var(--ink); margin-bottom:1rem; }
+  textarea { width:100%; padding:.7rem; border:1px solid var(--border); border-radius:6px; min-height:80px; resize:vertical; }
+  button.primary { width:100%; background:var(--accent); color:#fff; border:none; border-radius:6px; padding:.9rem; font-weight:700; cursor:pointer; margin-top:1rem; }
+  button.primary:disabled { background:#ccc; cursor:not-allowed; }
+  button.primary:hover:not(:disabled) { filter:brightness(1.05); }
+  .date-slots { display:grid; grid-template-columns:repeat(auto-fill, minmax(90px,1fr)); gap:.5rem; margin-top:.5rem; }
+  .slot { border:1px solid var(--border); background:var(--card); border-radius:5px; padding:.5rem; text-align:center; font-size:.9rem; cursor:pointer; }
+  .slot:hover, .slot.selected { border-color:var(--accent); background:#fffbf2; }
+  .toast { display:none; background:#1f1f1f; color:#fff; padding:1rem; border-radius:6px; text-align:center; margin-top:1rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Rudy's Barbershop</h1>
+  <p>Book an appointment at Fremont, Seattle</p>
+</header>
+<div class="container">
+  <div class="main">
+    <div class="step" id="step-service">
+      <h2>1. Choose a service</h2>
+      <div class="note">Service prices shown are starting rates. The final price depends on the stylist you select.</div>
+      <div class="service-grid" id="services"></div>
+    </div>
+    <div class="step" id="step-stylist">
+      <h2>2. Choose a stylist</h2>
+      <div class="stylist-grid" id="stylists"></div>
+    </div>
+    <div class="step" id="step-datetime">
+      <h2>3. Pick date & time</h2>
+      <input type="date" id="date">
+      <div class="date-slots" id="slots"></div>
+    </div>
+    <div class="step" id="step-details">
+      <h2>4. Your details</h2>
+      <label for="name">Full name</label>
+      <input type="text" id="name" placeholder="Jane Doe">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="jane@email.com">
+      <label for="phone">Phone</label>
+      <input type="tel" id="phone" placeholder="(555) 123-4567">
+      <label for="notes">Notes (optional)</label>
+      <textarea id="notes" placeholder="Any requests..."></textarea>
+    </div>
+  </div>
+  <aside class="sidebar">
+    <h2>Booking summary</h2>
+    <div id="summary">
+      <div class="summary-row"><span class="summary-label">Service</span><span id="sum-service">-</span></div>
+      <div class="summary-row"><span class="summary-label">Stylist</span><span id="sum-stylist">-</span></div>
+      <div class="summary-row"><span class="summary-label">Date</span><span id="sum-date">-</span></div>
+      <div class="summary-row"><span class="summary-label">Time</span><span id="sum-time">-</span></div>
+      <div class="summary-row total"><span>Total</span><span id="sum-total">-</span></div>
+    </div>
+    <button class="primary" id="book-btn" disabled>Complete booking</button>
+    <div class="toast" id="toast">Booking saved!</div>
+  </aside>
+</div>
+<script>
+const services = [
+  { id: 'buzz', name: 'Buzz Cut', duration: '15min+', from: 28, price: 28, desc: 'Clipper cut only, no more than two guards, no longer than 1/4 inch. Excludes skin/bald fades. Includes shampoo, scalp massage, condition, hot towel, flash style.' },
+  { id: 'bald', name: 'Bald Fade', duration: '30min+', from: 45, price: 45, desc: 'Hair gradually transitions from longer on top to bald on sides/back with a seamless blend. Includes shampoo and quick flash style.' },
+  { id: 'short', name: 'Short Cut', duration: '20min+', from: 45, price: 45, desc: 'Short hair shorter than the jawline, any combo of shears, razor, clippers, trimmers. Includes most fades, shampoo, scalp massage, condition, hot towel, flash style.' },
+  { id: 'long', name: 'Long Haircut', duration: '30min+', from: 58, price: 58, desc: 'Long hair with shears, razor, clippers, trimmers. Includes fringe, layers, texturizing, shampoo, scalp massage, condition, rough blow-dry to 80%, flash style.' }
+];
+const stylists = [
+  { id: 'johnnie', name: 'Johnnie (Barber)', price: 47 },
+  { id: 'kc', name: 'KC (Wed/Thu/Fri + Shaves)', price: 39 },
+  { id: 'katelyn', name: 'Katelyn H.', price: 39 },
+  { id: 'kerri', name: 'Kerri C.', price: 39 },
+  { id: 'nat', name: 'Nat', price: 39 },
+  { id: 'cassandra', name: 'Cassandra', price: 31 },
+  { id: 'cecilia', name: 'Cecilia P.', price: 31 },
+  { id: 'elaina', name: 'Elaina', price: 31 },
+  { id: 'jaycee', name: 'Jaycee', price: 31 },
+  { id: 'kaisha', name: 'Kaisha L.', price: 31 },
+  { id: 'kai', name: 'Kai - Level 2', price: 28 },
+  { id: 'mykey', name: 'MyKey - Level 4', price: 55 }
+];
+const timeSlots = ['9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM','12:00 PM','12:30 PM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM','4:00 PM','4:30 PM','5:00 PM','5:30 PM','6:00 PM','6:30 PM'];
+let state = { service: null, stylist: null, date: '', time: '' };
+
+const servicesEl = document.getElementById('services');
+services.forEach(s => {
+  const div = document.createElement('div');
+  div.className = 'card';
+  div.dataset.id = s.id;
+  div.innerHTML = `<div class="card-header"><div class="card-title">${s.name}</div><div class="card-meta">${s.duration} <span class="card-price">from $${s.from}</span></div></div><div class="card-desc">${s.desc}</div>`;
+  div.onclick = () => selectService(s.id);
+  servicesEl.appendChild(div);
+});
+
+const stylistsEl = document.getElementById('stylists');
+stylists.forEach(s => {
+  const div = document.createElement('div');
+  div.className = 'stylist';
+  div.dataset.id = s.id;
+  div.innerHTML = `<span class="name">${s.name}</span><span class="price">$${s.price}</span>`;
+  div.onclick = () => selectStylist(s.id);
+  stylistsEl.appendChild(div);
+});
+
+const dateInput = document.getElementById('date');
+const today = new Date().toISOString().split('T')[0];
+dateInput.min = today;
+dateInput.value = today;
+state.date = today;
+
+const slotsEl = document.getElementById('slots');
+timeSlots.forEach(t => {
+  const div = document.createElement('div');
+  div.className = 'slot';
+  div.textContent = t;
+  div.onclick = () => selectTime(t);
+  slotsEl.appendChild(div);
+});
+
+function selectService(id) {
+  state.service = services.find(s => s.id === id);
+  document.querySelectorAll('#services .card').forEach(el => el.classList.toggle('selected', el.dataset.id === id));
+  updateSummary();
+}
+function selectStylist(id) {
+  state.stylist = stylists.find(s => s.id === id);
+  document.querySelectorAll('#stylists .stylist').forEach(el => el.classList.toggle('selected', el.dataset.id === id));
+  updateSummary();
+}
+dateInput.addEventListener('change', e => { state.date = e.target.value; updateSummary(); });
+function selectTime(t) {
+  state.time = t;
+  document.querySelectorAll('#slots .slot').forEach(el => el.classList.toggle('selected', el.textContent === t));
+  updateSummary();
+}
+function updateSummary() {
+  document.getElementById('sum-service').textContent = state.service ? `${state.service.name} ($${state.service.price})` : '-';
+  document.getElementById('sum-stylist').textContent = state.stylist ? state.stylist.name : '-';
+  document.getElementById('sum-date').textContent = state.date || '-';
+  document.getElementById('sum-time').textContent = state.time || '-';
+  const total = (state.service?.price || 0) + (state.stylist?.price || 0) - (state.service?.price || 0);
+  // Stylist price is the actual haircut price; service "from" is a base floor.
+  // For this demo, use the higher of stylist price or service price as the real appointment price.
+  const realPrice = (state.service && state.stylist) ? Math.max(state.service.price, state.stylist.price) : 0;
+  document.getElementById('sum-total').textContent = state.service && state.stylist ? `$${realPrice}` : '-';
+  document.getElementById('book-btn').disabled = !(state.service && state.stylist && state.date && state.time && document.getElementById('name').value && document.getElementById('email').value);
+}
+['name','email','phone'].forEach(id => document.getElementById(id).addEventListener('input', updateSummary));
+
+document.getElementById('book-btn').onclick = () => {
+  const booking = {
+    ...state,
+    name: document.getElementById('name').value,
+    email: document.getElementById('email').value,
+    phone: document.getElementById('phone').value,
+    notes: document.getElementById('notes').value,
+    total: Math.max(state.service.price, state.stylist.price),
+    created: new Date().toISOString()
+  };
+  const existing = JSON.parse(localStorage.getItem('rudysBookings') || '[]');
+  existing.push(booking);
+  localStorage.setItem('rudysBookings', JSON.stringify(existing));
+  const toast = document.getElementById('toast');
+  toast.style.display = 'block';
+  setTimeout(() => toast.style.display = 'none', 3000);
+};
+</script>
+</body>
+</html>

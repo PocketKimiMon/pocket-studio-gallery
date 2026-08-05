@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyKey Pocket — Booking (Remix)</title>
+<style>
+  :root{ --void:#120E17; --lime:#8ACE00; --flush:#FF5A5F; --bone:#F3ECDE; --ink:#1a1620; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--void);font-family:"Inter",system-ui,sans-serif;color:#fff}
+  /* top sticky book bar so the remix is actually usable as a booking page */
+  .bookbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;padding:10px 18px;background:rgba(18,14,23,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.08)}
+  .bookbar .logo{font-weight:800;font-size:15px;letter-spacing:.02em}
+  .bookbar .logo b{color:var(--lime)}
+  .bookbar .spacer{flex:1}
+  .bookbar a{color:#fff;text-decoration:none;font-size:13px;font-weight:600;padding:8px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.18)}
+  .bookbar a.cta{background:var(--lime);color:var(--void);border-color:var(--lime)}
+  /* stacked sections from the 20-version remix */
+  .stack{max-width:960px;margin:0 auto}
+  .stack section{margin:0;line-height:0}
+  .stack section img{width:100%;display:block}
+  footer{text-align:center;padding:28px 18px;color:#8B8693;font-size:12px;border-top:1px solid rgba(255,255,255,.08)}
+  footer a{color:var(--lime)}
+</style>
+</head>
+<body>
+  <div class="bookbar">
+    <span class="logo">my<b>key</b> pocket</span>
+    <span class="spacer"></span>
+    <a href="#services">Services</a>
+    <a href="#about">About</a>
+    <a class="cta" href="https://pocketkimimon.github.io/pocket-studio-booking/">Book now →</a>
+  </div>
+
+  <div class="stack" id="stack">
+    <!-- sections injected from mixed-page.html order, using local assets -->
+  </div>
+
+  <footer>
+    Remix built from 20 archived Pocket Studio / MyKey booking-page versions ·
+    <a href="../mixer.html">open the mixer</a> ·
+    <a href="../">view all versions</a>
+  </footer>
+
+  <script>
+  // order taken directly from Downloads/mixed-page.html (the exported mix)
+  const ORDER = [
+    "v11_s1","v04_s1","v10_s1","v06_s2","v10_s2","v06_s1","v19_s5","v15_s1",
+    "v09_s2","v18_s3","v15_s2","v13_s4","v04_s4","v19_s4","v15_s4","v18_s6",
+    "v20_s2","v19_s6","v20_s3"
+  ];
+  const stack = document.getElementById('stack');
+  for(const t of ORDER){
+    const sec = document.createElement('section');
+    const img = document.createElement('img');
+    img.src = 'assets/' + t + '.png';
+    img.alt = 'booking section ' + t;
+    img.loading = 'lazy';
+    sec.appendChild(img);
+    stack.appendChild(sec);
+  }
+  </script>
+</body>
+</html>

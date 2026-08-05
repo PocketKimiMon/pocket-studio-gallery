@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rudy's Barbershop — Fremont Service Menu</title>
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --ink: #1f1f1f;
+    --accent: #c49a3b;
+    --muted: #6b6b6b;
+    --card: #ffffff;
+    --border: #e2ddd3;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  header {
+    background: var(--ink);
+    color: #fff;
+    padding: 2.5rem 1rem 1.5rem;
+    text-align: center;
+  }
+  header h1 { margin: 0; font-size: 2.2rem; letter-spacing: 1px; }
+  header p { margin: .4rem 0 0; color: var(--accent); font-weight: 600; }
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1rem 4rem;
+  }
+  section { margin-bottom: 2.5rem; }
+  h2 {
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: .35rem;
+    margin: 0 0 1rem;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.1rem 1.25rem;
+    margin-bottom: .85rem;
+  }
+  .item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .item-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+  .meta {
+    color: var(--muted);
+    font-size: .92rem;
+    white-space: nowrap;
+  }
+  .price {
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .desc {
+    margin-top: .5rem;
+    color: var(--muted);
+    font-size: .95rem;
+  }
+  .stylist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: .75rem;
+  }
+  .stylist {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: .85rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .note {
+    background: #fff8e1;
+    border-left: 4px solid var(--accent);
+    padding: 1rem 1.25rem;
+    border-radius: 0 8px 8px 0;
+    font-size: .95rem;
+  }
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: .85rem;
+    padding: 2rem 1rem;
+  }
+  @media print {
+    body { background: #fff; }
+    header { background: #fff; color: #000; border-bottom: 2px solid #000; }
+    .item, .stylist { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Rudy's Barbershop</h1>
+  <p>Fremont, Seattle, WA — Service Menu</p>
+</header>
+<main>
+  <section>
+    <h2>Haircuts</h2>
+
+    <div class="item">
+      <div class="item-header">
+        <span class="item-title">Buzz Cut</span>
+        <span class="meta">15min+ <span class="price">from $28.00</span></span>
+      </div>
+      <div class="desc">Clipper cut only, no more than two guards, and no longer than 1/4 inch with a light taper. Excludes skin/bald fades. Includes shampoo, short scalp massage, condition, hot towel, and flash style with product.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header">
+        <span class="item-title">Bald Fade</span>
+        <span class="meta">30min+ <span class="price">from $45.00</span></span>
+      </div>
+      <div class="desc">A bald fade is a haircut where the hair gradually transitions from longer on top to bald on the sides and back, with a seamless transition between the two lengths. Includes shampoo and quick flash style.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header">
+        <span class="item-title">Short Cut</span>
+        <span class="meta">20min+ <span class="price">from $45.00</span></span>
+      </div>
+      <div class="desc">Short hair, shorter than the jawline, with any combination of shears, razor, clippers, and trimmers. Includes most fades. Includes shampoo, short scalp massage, condition, hot towel, and flash style with product.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header">
+        <span class="item-title">Long Haircut</span>
+        <span class="meta">30min+ <span class="price">from $58.00</span></span>
+      </div>
+      <div class="desc">Long hair, longer than the jawline with any combination of shears, razor, clippers, trimmers. Includes fringe, layers, and texturizing if needed. Includes shampoo, short scalp massage, condition, rough blow-dry to 80%, and flash style with product. Full blow outs and hot tools can be added under "Add a Treatment" > "Extras."</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Extras</h2>
+    <div class="note">
+      Add-on treatments available in the booking flow (bang trim, scalp massage, beard trim, conditioning treatment, etc.).
+    </div>
+  </section>
+
+  <section>
+    <h2>Color</h2>
+    <div class="item">
+      <div class="item-title">Color Consultation</div>
+      <div class="desc">Book a complimentary color consultation so we can find out what you need and the best path to take you there. Your color services will be scheduled following the consultation.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Fremont Stylists</h2>
+    <div class="stylist-grid">
+      <div class="stylist"><span>Johnnie (Barber)</span><span class="price">$47</span></div>
+      <div class="stylist"><span>KC (Wed/Thu/Fri + Shaves)</span><span class="price">$39</span></div>
+      <div class="stylist"><span>Katelyn H.</span><span class="price">$39</span></div>
+      <div class="stylist"><span>Kerri C.</span><span class="price">$39</span></div>
+      <div class="stylist"><span>Nat</span><span class="price">$39</span></div>
+      <div class="stylist"><span>Cassandra</span><span class="price">$31</span></div>
+      <div class="stylist"><span>Cecilia P.</span><span class="price">$31</span></div>
+      <div class="stylist"><span>Elaina</span><span class="price">$31</span></div>
+      <div class="stylist"><span>Jaycee</span><span class="price">$31</span></div>
+      <div class="stylist"><span>Kaisha L.</span><span class="price">$31</span></div>
+      <div class="stylist"><span>Kai - Level 2</span><span class="price">$28</span></div>
+    </div>
+  </section>
+</main>
+<footer>
+  Scraped from Rudy's online booking system on July 10, 2026. Prices may vary by stylist and are subject to change.
+</footer>
+</body>
+</html>

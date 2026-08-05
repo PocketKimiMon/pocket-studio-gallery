@@ -1,0 +1,22 @@
+{
+  "email": {
+    "enabled": true,
+    "smtp_host": "localhost",
+    "smtp_port": 8525,
+    "user": "mykey@test.local",
+    "to": "MYKEYPOCKET@ICLOUD.COM",
+    "pass": "test",
+    "use_tls": false
+  },
+  "telegram": {
+    "enabled": true,
+    "token": "TEST_TOKEN",
+    "chat_id": "TEST_CHAT",
+    "api_base": "http://localhost:8526"
+  },
+  "sheet": {
+    "enabled": true,
+    "webhook": "http://localhost:8527",
+    "local_file": "data/sheet_local.json"
+  }
+}

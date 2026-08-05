@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book MyKey Mobile Barber</title>
+<style>
+  :root { --bg:#f7f5f0; --ink:#1f1f1f; --accent:#c49a3b; --muted:#6b6b6b; --card:#fff; --border:#e2ddd3; --danger:#b71c1c; --success:#1b5e20; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.5; }
+  header { background:var(--ink); color:#fff; padding:2rem 1rem 1.25rem; text-align:center; }
+  header h1 { margin:0; font-size:2rem; letter-spacing:1px; }
+  header p { margin:.4rem 0 0; color:var(--accent); font-weight:600; }
+  .container { max-width:980px; margin:0 auto; padding:2rem 1rem 4rem; display:grid; grid-template-columns:1fr 340px; gap:2rem; }
+  @media (max-width:820px) { .container { grid-template-columns:1fr; } }
+  h2 { border-bottom:2px solid var(--accent); padding-bottom:.35rem; margin:0 0 1rem; font-size:1.15rem; text-transform:uppercase; letter-spacing:.5px; }
+  .step { margin-bottom:2rem; }
+  .service-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:.75rem; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1rem 1.1rem; cursor:pointer; transition:box-shadow .15s, border-color .15s; }
+  .card:hover { box-shadow:0 4px 12px rgba(0,0,0,.08); border-color:var(--accent); }
+  .card.selected { border:2px solid var(--accent); background:#fffbf2; }
+  .card-title { font-weight:700; }
+  .card-meta { color:var(--muted); font-size:.9rem; margin-top:.2rem; }
+  .card-price { color:var(--accent); font-weight:700; }
+  .card-desc { font-size:.88rem; color:var(--muted); margin-top:.45rem; }
+  .stylist-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px,1fr)); gap:.7rem; }
+  .stylist { background:var(--card); border:1px solid var(--border); border-radius:6px; padding:.8rem 1rem; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
+  .stylist:hover, .stylist.selected { border-color:var(--accent); background:#fffbf2; }
+  .stylist .name { font-size:.95rem; }
+  .stylist .price { color:var(--accent); font-weight:700; font-size:.95rem; }
+  .sidebar { position:sticky; top:1rem; align-self:start; background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1.25rem; }
+  .summary-row { display:flex; justify-content:space-between; padding:.45rem 0; border-bottom:1px solid var(--border); font-size:.95rem; }
+  .summary-row.total { font-size:1.2rem; font-weight:700; border-bottom:none; padding-top:.8rem; }
+  .summary-label { color:var(--muted); }
+  .empty { color:var(--muted); font-size:.95rem; }
+  input, textarea, button, select { font-family:inherit; font-size:1rem; }
+  label { display:block; font-size:.9rem; color:var(--muted); margin-bottom:.25rem; }
+  input[type="text"], input[type="email"], input[type="tel"], input[type="date"], input[type="url"], select { width:100%; padding:.7rem; border:1px solid var(--border); border-radius:6px; margin-bottom:.75rem; }
+  textarea { width:100%; padding:.7rem; border:1px solid var(--border); border-radius:6px; min-height:80px; resize:vertical; }
+  .note { background:#fff8e1; border-left:4px solid var(--accent); padding:.75rem 1rem; border-radius:0 6px 6px 0; font-size:.9rem; color:var(--ink); margin-bottom:1rem; }
+  button.primary { width:100%; background:var(--accent); color:#fff; border:none; border-radius:6px; padding:.9rem; font-weight:700; cursor:pointer; margin-top:1rem; }
+  button.primary:disabled { background:#ccc; cursor:not-allowed; }
+  button.primary:hover:not(:disabled) { filter:brightness(1.05); }
+  button.secondary { background:transparent; border:1px solid var(--border); color:var(--muted); cursor:pointer; padding:.5rem 1rem; border-radius:6px; }
+  button.secondary:hover { border-color:var(--accent); color:var(--ink); }
+  .date-slots { display:grid; grid-template-columns:repeat(auto-fill, minmax(90px,1fr)); gap:.5rem; margin-top:.5rem; }
+  .slot { border:1px solid var(--border); background:var(--card); border-radius:5px; padding:.5rem; text-align:center; font-size:.9rem; cursor:pointer; }
+  .slot:hover, .slot.selected { border-color:var(--accent); background:#fffbf2; }
+  .slot.disabled { opacity:.4; cursor:not-allowed; text-decoration:line-through; }
+  .toast { display:none; background:var(--success); color:#fff; padding:1rem; border-radius:6px; text-align:center; margin-top:1rem; }
+  .toast.error { background:var(--danger); }
+  .toggle { display:flex; gap:.5rem; margin-bottom:1rem; }
+  .toggle button { flex:1; background:var(--card); border:1px solid var(--border); border-radius:6px; padding:.7rem; cursor:pointer; }
+  .toggle button.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .upload-row { display:flex; gap:.5rem; align-items:center; margin-bottom:.75rem; }
+  .upload-row input[type="file"] { flex:1; margin-bottom:0; }
+  .upload-list { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.5rem; }
+  .upload-item { background:#fff8e1; border:1px solid var(--border); border-radius:6px; padding:.35rem .6rem; font-size:.85rem; display:flex; align-items:center; gap:.4rem; }
+  .admin { position:fixed; bottom:1rem; left:1rem; }
+  .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.7); display:none; align-items:center; justify-content:center; padding:1rem; z-index:100; }
+  .modal-overlay.show { display:flex; }
+  .modal { background:var(--card); border-radius:8px; padding:1.5rem; max-width:720px; width:100%; max-height:90vh; overflow:auto; }
+  .modal h2 { margin-top:0; }
+  .booking-row { display:flex; justify-content:space-between; align-items:flex-start; border:1px solid var(--border); border-radius:6px; padding:.75rem; margin-bottom:.5rem; }
+  .booking-row .actions { display:flex; gap:.4rem; flex-wrap:wrap; }
+  .badge { font-size:.75rem; padding:.2rem .5rem; border-radius:999px; text-transform:uppercase; font-weight:700; }
+  .badge.pending { background:#fff8e1; color:#856404; }
+  .badge.confirmed { background:#e8f5e9; color:#1b5e20; }
+  .badge.cancelled { background:#ffebee; color:#b71c1c; }
+  .badge.completed { background:#e3f2fd; color:#0d47a1; }
+  .tabs { display:flex; gap:.5rem; border-bottom:1px solid var(--border); margin-bottom:1rem; }
+  .tabs button { background:transparent; border:none; border-bottom:2px solid transparent; padding:.5rem; cursor:pointer; color:var(--muted); }
+  .tabs button.active { border-bottom-color:var(--accent); color:var(--ink); font-weight:700; }
+  .field-row { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+  @media (max-width:600px) { .field-row { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1 id="brandName">MyKey Mobile Barber</h1>
+  <p id="brandTagline">Haircuts, fades & color — at the shop or at your door.</p>
+</header>
+<div class="container">
+  <div class="main">
+    <div class="step" id="step-service">
+      <h2>1. Choose a service</h2>
+      <div class="service-grid" id="services"></div>
+    </div>
+    <div class="step" id="step-stylist">
+      <h2>2. Choose a stylist</h2>
+      <div class="stylist-grid" id="stylists"></div>
+    </div>
+    <div class="step" id="step-location">
+      <h2>3. Where should I meet you?</h2>
+      <div class="toggle">
+        <button type="button" class="active" id="loc-shop" onclick="setLocation('shop')">At the shop</button>
+        <button type="button" id="loc-travel" onclick="setLocation('travel')">I'll come to you</button>
+      </div>
+      <div id="travel-fields" class="hidden">
+        <label for="address">Your address</label>
+        <input type="text" id="address" placeholder="123 Main St, Seattle, WA" onblur="calculateTravel()">
+        <button type="button" class="secondary" onclick="calculateTravel()">Calculate travel fee</button>
+        <div id="travel-result" class="note hidden"></div>
+      </div>
+    </div>
+    <div class="step" id="step-datetime">
+      <h2>4. Pick date & time</h2>
+      <input type="date" id="date">
+      <div class="date-slots" id="slots"></div>
+    </div>
+    <div class="step" id="step-details">
+      <h2>5. Your details</h2>
+      <label for="name">Full name</label>
+      <input type="text" id="name" placeholder="Jane Doe">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="jane@email.com">
+      <label for="phone">Phone</label>
+      <input type="tel" id="phone" placeholder="(555) 123-4567">
+      <label for="notes">Notes (optional)</label>
+      <textarea id="notes" placeholder="Any requests, hair type, or parking info..."></textarea>
+      <label for="reference">Reference photo (optional)</label>
+      <div class="upload-row">
+        <input type="file" id="reference" accept="image/*">
+        <button type="button" class="secondary" onclick="uploadReference()">Upload</button>
+      </div>
+      <div class="upload-list" id="uploads"></div>
+    </div>
+  </div>
+  <aside class="sidebar">
+    <h2>Booking summary</h2>
+    <div id="summary">
+      <div class="summary-row"><span class="summary-label">Service</span><span id="sum-service">-</span></div>
+      <div class="summary-row"><span class="summary-label">Stylist</span><span id="sum-stylist">-</span></div>
+      <div class="summary-row"><span class="summary-label">Location</span><span id="sum-location">-</span></div>
+      <div class="summary-row"><span class="summary-label">Date</span><span id="sum-date">-</span></div>
+      <div class="summary-row"><span class="summary-label">Time</span><span id="sum-time">-</span></div>
+      <div class="summary-row" id="row-travel"><span class="summary-label">Travel</span><span id="sum-travel">-</span></div>
+      <div class="summary-row total"><span>Total</span><span id="sum-total">-</span></div>
+    </div>
+    <button class="primary" id="book-btn" disabled>Complete booking</button>
+    <div class="toast" id="toast">Booking saved!</div>
+  </aside>
+</div>
+
+<button class="secondary admin" onclick="openAdmin()">⚙️ Manage bookings</button>
+
+<div class="modal-overlay" id="adminModal">
+  <div class="modal">
+    <h2>Manage bookings & clients</h2>
+    <div class="tabs">
+      <button class="active" onclick="switchTab('bookings')">Bookings</button>
+      <button onclick="switchTab('settings')">Settings</button>
+    </div>
+    <div id="tab-bookings">
+      <input type="text" id="search" placeholder="Search by name or email" oninput="renderBookings()">
+      <div id="bookingsList"><div class="empty">Loading...</div></div>
+    </div>
+    <div id="tab-settings" class="hidden">
+      <label for="cfg-business">Business name</label>
+      <input type="text" id="cfg-business">
+      <label for="cfg-tagline">Tagline</label>
+      <input type="text" id="cfg-tagline">
+      <label for="cfg-email">Provider email</label>
+      <input type="email" id="cfg-email">
+      <label for="cfg-location">Base location (city)</label>
+      <input type="text" id="cfg-location">
+      <div class="field-row">
+        <div>
+          <label for="cfg-flat">Travel flat fee ($)</label>
+          <input type="text" id="cfg-flat">
+        </div>
+        <div>
+          <label for="cfg-mile">Per-mile fee ($)</label>
+          <input type="text" id="cfg-mile">
+        </div>
+        <div>
+          <label for="cfg-radius">Max radius (mi)</label>
+          <input type="text" id="cfg-radius">
+        </div>
+      </div>
+      <button class="primary" onclick="saveSettings()">Save settings</button>
+    </div>
+    <div style="margin-top:1rem; text-align:right;">
+      <button class="secondary" onclick="closeAdmin()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = '';
+let config = {};
+let state = { service: null, stylist: null, locationType: 'shop', address: '', travel: null, date: '', time: '', attachments: [] };
+function formatDate(d) {
+  const [y, m, day] = d.split('-').map(Number);
+  return new Date(y, m - 1, day).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+}
+
+async function init() {
+  try {
+    const res = await fetch(`${API}/api/config`);
+    config = await res.json();
+  } catch (e) {
+    console.warn('Backend unavailable, using defaults', e);
+    config = {
+      businessName: 'MyKey Mobile Barber', tagline: 'Haircuts, fades & color.', providerEmail: 'MYKEYPOCKET@ICLOUD.COM',
+      location: 'Seattle, WA', travelFlatFee: 25, travelPerMile: 2, maxTravelRadius: 30,
+      services: [
+        {id:'buzz',name:'Buzz Cut',duration:'15min+',price:28,desc:'Clipper cut only.'},
+        {id:'short',name:'Short Cut',duration:'20min+',price:45,desc:'Short hair cut.'},
+        {id:'bald',name:'Bald Fade',duration:'30min+',price:45,desc:'Bald fade.'},
+        {id:'long',name:'Long Haircut',duration:'30min+',price:58,desc:'Long hair.'},
+        {id:'color-new',name:'New Color Client',duration:'consult+',price:0,desc:'Free color consultation.'},
+        {id:'color-return',name:'Established Color Client',duration:'90min+',price:120,desc:'Maintenance color.'},
+        {id:'audhd',name:'AuDHD First-Time Haircut',duration:'45min+',price:55,desc:'Gentle first haircut.'},
+        {id:'true-self',name:'Let\'s Find True Self',duration:'60min+',price:75,desc:'Identity + haircut session.'},
+        {id:'silent',name:'Silent Cut',duration:'30min+',price:45,desc:'Quiet, low-social appointment.'}
+      ],
+      stylists: [{id:'mykey',name:'MyKey',price:0}]
+    };
+  }
+  document.getElementById('brandName').textContent = config.businessName;
+  document.getElementById('brandTagline').textContent = config.tagline;
+  document.title = 'Book ' + config.businessName;
+  renderServices();
+  renderStylists();
+
+  const dateInput = document.getElementById('date');
+  const today = new Date().toISOString().split('T')[0];
+  dateInput.min = today;
+  dateInput.value = today;
+  state.date = today;
+  renderSlots();
+  renderBookings();
+  updateSummary();
+
+  dateInput.addEventListener('change', e => { state.date = e.target.value; updateSummary(); });
+  ['name','email','phone','notes'].forEach(id => document.getElementById(id).addEventListener('input', updateSummary));
+  document.getElementById('book-btn').onclick = submitBooking;
+
+  // Fill settings form
+  document.getElementById('cfg-business').value = config.businessName || '';
+  document.getElementById('cfg-tagline').value = config.tagline || '';
+  document.getElementById('cfg-email').value = config.providerEmail || '';
+  document.getElementById('cfg-location').value = config.location || '';
+  document.getElementById('cfg-flat').value = config.travelFlatFee || 0;
+  document.getElementById('cfg-mile').value = config.travelPerMile || 0;
+  document.getElementById('cfg-radius').value = config.maxTravelRadius || 0;
+}
+
+function renderServices() {
+  const container = document.getElementById('services');
+  container.innerHTML = '';
+  (config.services || []).forEach(s => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.dataset.id = s.id;
+    div.innerHTML = `<div class="card-title">${s.name}</div><div class="card-meta">${s.duration} <span class="card-price">${s.price === 0 ? 'Free' : '$' + s.price}</span></div><div class="card-desc">${s.desc}</div>`;
+    div.onclick = () => selectService(s.id);
+    container.appendChild(div);
+  });
+}
+
+function renderStylists() {
+  const container = document.getElementById('stylists');
+  container.innerHTML = '';
+  (config.stylists || []).forEach(s => {
+    const div = document.createElement('div');
+    div.className = 'stylist';
+    div.dataset.id = s.id;
+    div.innerHTML = `<span class="name">${s.name}</span><span class="price">$${s.price}</span>`;
+    div.onclick = () => selectStylist(s.id);
+    container.appendChild(div);
+  });
+}
+
+function selectService(id) {
+  state.service = (config.services || []).find(s => s.id === id);
+  document.querySelectorAll('#services .card').forEach(el => el.classList.toggle('selected', el.dataset.id === id));
+  updateSummary();
+}
+function selectStylist(id) {
+  state.stylist = (config.stylists || []).find(s => s.id === id);
+  document.querySelectorAll('#stylists .stylist').forEach(el => el.classList.toggle('selected', el.dataset.id === id));
+  updateSummary();
+}
+function setLocation(type) {
+  state.locationType = type;
+  document.getElementById('loc-shop').classList.toggle('active', type === 'shop');
+  document.getElementById('loc-travel').classList.toggle('active', type === 'travel');
+  document.getElementById('travel-fields').classList.toggle('hidden', type !== 'travel');
+  if (type === 'shop') { state.address = ''; state.travel = null; document.getElementById('address').value = ''; }
+  updateSummary();
+}
+async function calculateTravel() {
+  const address = document.getElementById('address').value.trim();
+  if (!address) return;
+  state.address = address;
+  try {
+    const res = await fetch(`${API}/api/travel-fee`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({address}) });
+    const data = await res.json();
+    state.travel = data;
+    const result = document.getElementById('travel-result');
+    result.classList.remove('hidden');
+    if (data.available) {
+      result.textContent = `Distance: ${data.distance_mi ? data.distance_mi + ' mi' : 'unknown'} — Travel fee: $${data.fee}`;
+      result.style.background = '#e8f5e9';
+    } else {
+      result.textContent = `Sorry: ${data.reason || 'Outside service area'}`;
+      result.style.background = '#ffebee';
+    }
+  } catch (e) {
+    showToast('Could not calculate travel fee', true);
+  }
+  updateSummary();
+}
+
+function renderSlots() {
+  const slots = ['9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM','12:00 PM','12:30 PM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM','4:00 PM','4:30 PM','5:00 PM','5:30 PM','6:00 PM','6:30 PM'];
+  const container = document.getElementById('slots');
+  container.innerHTML = '';
+  slots.forEach(t => {
+    const div = document.createElement('div');
+    div.className = 'slot';
+    div.textContent = t;
+    div.onclick = () => selectTime(t);
+    container.appendChild(div);
+  });
+}
+function selectTime(t) {
+  state.time = t;
+  document.querySelectorAll('#slots .slot').forEach(el => el.classList.toggle('selected', el.textContent === t));
+  updateSummary();
+}
+function updateSummary() {
+  document.getElementById('sum-service').textContent = state.service ? `${state.service.name} ($${state.service.price})` : '-';
+  document.getElementById('sum-stylist').textContent = state.stylist ? state.stylist.name : '-';
+  document.getElementById('sum-location').textContent = state.locationType === 'travel' ? 'Travel to you' : 'At the shop';
+  document.getElementById('sum-date').textContent = state.date ? formatDate(state.date) : '-';
+  document.getElementById('sum-time').textContent = state.time || '-';
+  const travelFee = (state.travel && state.travel.available) ? state.travel.fee : 0;
+  document.getElementById('sum-travel').textContent = state.locationType === 'travel' ? (state.travel ? `$${travelFee}` : 'Calculate') : '-';
+  const basePrice = (state.service && state.stylist) ? Math.max(state.service.price, state.stylist.price) : (state.service ? state.service.price : 0);
+  const total = basePrice + travelFee;
+  document.getElementById('sum-total').textContent = state.service ? (total === 0 ? 'Free' : `$${total}`) : '-';
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  let valid = state.service && state.stylist && state.date && state.time && name && email.includes('@') && phone;
+  if (state.locationType === 'travel' && (!state.travel || !state.travel.available)) valid = false;
+  document.getElementById('book-btn').disabled = !valid;
+}
+async function uploadReference() {
+  const input = document.getElementById('reference');
+  if (!input.files.length) return;
+  const file = input.files[0];
+  const form = new FormData();
+  form.append('name', 'Reference photo');
+  form.append('file', file);
+  try {
+    const res = await fetch(`${API}/upload`, { method: 'POST', body: form });
+    const data = await res.json();
+    if (data.id) {
+      state.attachments.push(data.id);
+      renderUploads();
+      showToast('Photo uploaded');
+    } else {
+      showToast(data.error || 'Upload failed', true);
+    }
+  } catch (e) {
+    showToast('Upload failed', true);
+  }
+}
+function renderUploads() {
+  const container = document.getElementById('uploads');
+  container.innerHTML = state.attachments.map(id => `<span class="upload-item">📷 ${id.slice(0,8)} <a href="${API}/api/assets/${id}/thumb" target="_blank">view</a></span>`).join('');
+}
+async function submitBooking() {
+  const booking = {
+    serviceId: state.service.id, stylistId: state.stylist.id, date: state.date, time: state.time,
+    locationType: state.locationType, address: state.address, name: document.getElementById('name').value.trim(),
+    email: document.getElementById('email').value.trim(), phone: document.getElementById('phone').value.trim(),
+    notes: document.getElementById('notes').value.trim(), attachments: state.attachments
+  };
+  try {
+    const res = await fetch(`${API}/api/bookings`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(booking) });
+    const data = await res.json();
+    if (res.ok) {
+      showToast('Booking requested!');
+      // mailto to provider
+      const sub = `New booking: ${data.service.name} on ${data.date} at ${data.time}`;
+      const body = `New booking from ${data.client.name}\\nEmail: ${data.client.email}\\nPhone: ${data.client.phone}\\nService: ${data.service.name}\\nDate: ${data.date} ${data.time}\\nLocation: ${data.locationType === 'travel' ? 'Travel to ' + data.address : 'At the shop'}\\nTotal: $${data.total}\\nNotes: ${data.client.notes || 'None'}`;
+      window.open(`mailto:${config.providerEmail}?subject=${encodeURIComponent(sub)}&body=${encodeURIComponent(body)}`);
+      resetForm();
+      renderBookings();
+    } else {
+      showToast(data.error || 'Booking failed', true);
+    }
+  } catch (e) {
+    showToast('Booking failed', true);
+  }
+}
+function resetForm() {
+  state.service = null; state.stylist = null; state.locationType = 'shop'; state.address = ''; state.travel = null; state.time = ''; state.attachments = [];
+  document.getElementById('address').value = '';
+  document.getElementById('notes').value = '';
+  document.querySelectorAll('.card.selected, .stylist.selected, .slot.selected').forEach(el => el.classList.remove('selected'));
+  document.getElementById('loc-shop').click();
+  setLocation('shop');
+  renderUploads();
+  updateSummary();
+}
+function showToast(msg, isError) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isError ? ' error' : '');
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 3000);
+}
+
+// Admin / client management
+let activeTab = 'bookings';
+function openAdmin() { document.getElementById('adminModal').classList.add('show'); renderBookings(); }
+function closeAdmin() { document.getElementById('adminModal').classList.remove('show'); }
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase().includes(tab)));
+  document.getElementById('tab-bookings').classList.toggle('hidden', tab !== 'bookings');
+  document.getElementById('tab-settings').classList.toggle('hidden', tab !== 'settings');
+}
+async function renderBookings() {
+  const list = document.getElementById('bookingsList');
+  const q = document.getElementById('search').value.trim();
+  try {
+    const res = await fetch(`${API}/api/bookings${q ? '?q=' + encodeURIComponent(q) : ''}`);
+    const data = await res.json();
+    if (!data.bookings.length) { list.innerHTML = '<div class="empty">No bookings yet.</div>'; return; }
+    list.innerHTML = data.bookings.map(b => {
+      const loc = b.locationType === 'travel' ? `📍 ${b.address}` : 'At the shop';
+      const travel = b.locationType === 'travel' ? ` • Travel $${b.travel.fee}` : '';
+      return `<div class="booking-row">
+      <div>
+        <strong>${b.service.name}</strong> <span class="badge ${b.status}">${b.status}</span><br>
+        <span style="color:var(--muted);font-size:.85rem;">${formatDate(b.date)} ${b.time} • ${b.client.name} • ${b.client.email} • ${b.client.phone}</span><br>
+        <span style="color:var(--muted);font-size:.85rem;">${loc}${travel} • Total $${b.total}</span><br>
+        <span style="color:var(--muted);font-size:.82rem;">Notes: ${b.client.notes || 'none'}</span>
+      </div>
+      <div class="actions">
+        <button class="secondary" onclick="updateStatus('${b.id}','confirmed')">Confirm</button>
+        <button class="secondary" onclick="updateStatus('${b.id}','completed')">Done</button>
+        <button class="secondary" onclick="updateStatus('${b.id}','cancelled')">Cancel</button>
+        <button class="secondary" onclick="deleteBooking('${b.id}')">Delete</button>
+      </div>
+    </div>`;
+    }).join('');
+  } catch (e) {
+    list.innerHTML = '<div class="empty">Could not load bookings.</div>';
+  }
+}
+async function updateStatus(id, status) {
+  try {
+    await fetch(`${API}/api/bookings/${id}`, { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({status}) });
+    renderBookings();
+  } catch (e) {}
+}
+async function deleteBooking(id) {
+  if (!confirm('Delete this booking?')) return;
+  try {
+    await fetch(`${API}/api/bookings/${id}`, { method: 'DELETE' });
+    renderBookings();
+  } catch (e) {}
+}
+async function saveSettings() {
+  const payload = {
+    businessName: document.getElementById('cfg-business').value,
+    tagline: document.getElementById('cfg-tagline').value,
+    providerEmail: document.getElementById('cfg-email').value,
+    location: document.getElementById('cfg-location').value,
+    travelFlatFee: parseFloat(document.getElementById('cfg-flat').value) || 0,
+    travelPerMile: parseFloat(document.getElementById('cfg-mile').value) || 0,
+    maxTravelRadius: parseFloat(document.getElementById('cfg-radius').value) || 0
+  };
+  try {
+    await fetch(`${API}/api/config`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    showToast('Settings saved');
+    init();
+  } catch (e) {
+    showToast('Save failed', true);
+  }
+}
+
+init();
+</script>
+</body>
+</html>
